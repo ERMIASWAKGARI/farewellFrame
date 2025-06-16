@@ -1,11 +1,15 @@
 import { Menu, X } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
+import { useSelector } from 'react-redux'
 import { Link, NavLink } from 'react-router-dom'
+
 import ThemeToggle from './ThemeToggle'
 
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false)
   const menuRef = useRef(null)
+  const user = useSelector((state) => state.auth.user)
+  const isLoggedIn = Boolean(user) // Assuming `user` is null if not logged in
 
   const toggleMenu = () => setMobileOpen((prev) => !prev)
 
@@ -35,22 +39,29 @@ const Navbar = () => {
   const hoverClass =
     'hover:border-primary dark:hover:border-primary hover:text-primary dark:hover:text-primary'
 
-  const navLinks = [
-    { to: '/', label: 'Home' },
-    { to: '/upload', label: 'Upload Message' },
-    { to: '/gallery', label: 'Gallery' },
-    { to: '/about', label: 'About' },
-  ]
+  const navLinks = isLoggedIn
+    ? [
+        { to: '/', label: 'Home' },
+        { to: '/upload', label: 'Upload Message' },
+        { to: '/gallery', label: 'Gallery' },
+        { to: '/about', label: 'About' },
+      ]
+    : [
+        { to: '/', label: 'Home' },
+        { to: '/upload', label: 'Upload Message' },
+        { to: '/gallery', label: 'Gallery' },
+        { to: '/about', label: 'About' },
+      ]
 
   return (
-    <nav className="relative bg-background dark:bg-gray-900 shadow-sm transition-colors duration-500 px-4 py-4 z-50">
+    <nav className="relative bg-background shadow-sm transition-colors duration-500 px-4 py-4 z-50">
       <div className="max-w-7xl mx-auto flex items-center justify-between relative">
         {/* Brand */}
         <Link
           to="/"
           className="text-xl sm:text-2xl font-extrabold tracking-tight text-primary dark:text-primary hover:opacity-90 transition-opacity"
         >
-          Farewell Frame
+          FarewellFrame
         </Link>
 
         {/* Desktop Links */}
@@ -75,6 +86,36 @@ const Navbar = () => {
               {label}
             </NavLink>
           ))}
+          {isLoggedIn ? (
+            <div className="relative group">
+              <button className="text-sm font-semibold hover:opacity-90 transition">
+                Profile
+              </button>
+              {/* Simple dropdown on hover */}
+              <div className="absolute right-0 mt-2 w-40 rounded shadow-lg   opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none group-hover:pointer-events-auto z-50">
+                <Link
+                  to="/profile"
+                  className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+                >
+                  My Profile
+                </Link>
+                <button className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">
+                  Logout
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2">
+              <Link
+                to="/login"
+                className="block px-4 py-2 text-sm font-medium rounded-md bg-button text-text-primary 
+             hover:bg-primary/90 transition-colors duration-200"
+              >
+                Login
+              </Link>
+            </div>
+          )}
+
           <ThemeToggle />
         </div>
 
@@ -124,6 +165,32 @@ const Navbar = () => {
               {label}
             </NavLink>
           ))}
+          <div className="pt-1 border-t border-border">
+            {isLoggedIn ? (
+              <div className="mt-2 space-y-1">
+                <Link
+                  to="/profile"
+                  className="block px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
+                >
+                  My Profile
+                </Link>
+                <button className="block w-full text-left px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700">
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <div className="mt-2 space-y-1">
+                <Link
+                  to="/login"
+                  className="block px-4 py-2 text-sm font-medium rounded-md bg-button text-gray-900 dark:text-text-primary 
+             hover:bg-primary/90 dark:hover:bg-primary/90 transition-colors duration-200"
+                >
+                  Login
+                </Link>
+              </div>
+            )}
+          </div>
+
           <div className="pt-1 border-t border-border">
             <ThemeToggle />
           </div>

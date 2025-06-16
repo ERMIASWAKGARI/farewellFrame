@@ -1,6 +1,8 @@
 import { useEffect } from 'react'
+
 import { useSelector } from 'react-redux'
-import { BrowserRouter as Router, Routes } from 'react-router-dom'
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
+import Hero from './components/Hero'
 import Navbar from './components/Navbar'
 
 function App() {
@@ -34,7 +36,13 @@ function App() {
       <div className="bg-background dark:bg-background min-h-screen text-primary dark:text-primary transition-colors duration-500">
         <Navbar />
         <div className="p-4">
-          <Routes></Routes>
+          <Routes>
+            <Route path="/" element={<Hero />} />
+            {/* Add other routes here */}
+            {/* <Route path="/upload" element={<Upload />} />
+            <Route path="/gallery" element={<Gallery />} />
+            <Route path="/about" element={<About />} /> */}
+          </Routes>
         </div>
       </div>
     </Router>

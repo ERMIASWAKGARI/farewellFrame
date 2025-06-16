@@ -43,3 +43,9 @@ body {
 .text-text-secondary {
   color: var(--color-text-secondary);
 }
+.border-border {
+  border-color: var(--color-border);
+}
+.bg-button {
+  background-color: var(--color-button-bg);
+}
