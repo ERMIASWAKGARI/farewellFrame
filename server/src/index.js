@@ -2,6 +2,7 @@ const express = require('express')
 const mongoose = require('mongoose')
 const cors = require('cors')
 require('dotenv').config()
+const authRoutes = require('./routes/auth')
 
 const app = express()
 
@@ -16,9 +17,7 @@ mongoose
   .catch((err) => console.error('MongoDB connection error:', err))
 
 // Routes
-app.get('/', (req, res) => {
-  res.json({ message: 'Welcome to the Farewell Frame API' })
-})
+app.use('/api/v1/auth', authRoutes)
 
 // Error handling middleware
 app.use((err, req, res, next) => {

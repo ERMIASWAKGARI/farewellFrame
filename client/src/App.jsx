@@ -6,6 +6,7 @@ import Hero from './components/Hero'
 import Navbar from './components/Navbar'
 import AuthPage from './pages/Authentication'
 import ForgotPassword from './pages/ForgotPassword'
+import VerifyEmail from './pages/VerifyEmail'
 
 function App() {
   const mode = useSelector((state) => state.theme.mode)
@@ -42,6 +43,8 @@ function App() {
             <Route path="/" element={<Hero />} />
             <Route path="/auth" element={<AuthPage />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/verify-email/:token" element={<VerifyEmail />} />
+
             {/* Add other routes here */}
             {/* <Route path="/upload" element={<Upload />} />
             <Route path="/gallery" element={<Gallery />} />
