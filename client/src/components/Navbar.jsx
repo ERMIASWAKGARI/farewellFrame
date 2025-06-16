@@ -2,14 +2,31 @@ import { Menu, X } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Link, NavLink } from 'react-router-dom'
-
 import ThemeToggle from './ThemeToggle'
 
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
   const menuRef = useRef(null)
   const user = useSelector((state) => state.auth.user)
-  const isLoggedIn = Boolean(user) // Assuming `user` is null if not logged in
+  const isLoggedIn = Boolean(user)
+
+  // Handle scroll for sticky navbar with shadow
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 10) {
+        setScrolled(true)
+      } else {
+        setScrolled(false)
+      }
+    }
+
+    // Add smooth scroll behavior to the whole document
+    document.documentElement.style.scrollBehavior = 'smooth'
+
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   const toggleMenu = () => setMobileOpen((prev) => !prev)
 
@@ -31,6 +48,19 @@ const Navbar = () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [mobileOpen])
+
+  // Smooth scroll to anchor links
+  const handleSmoothScroll = (e) => {
+    // Only handle internal anchor links
+    if (e.target.hash && e.target.pathname === window.location.pathname) {
+      e.preventDefault()
+      const target = document.querySelector(e.target.hash)
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth' })
+      }
+    }
+    setMobileOpen(false)
+  }
 
   const baseLink =
     'relative text-sm md:text-base font-medium transition-all duration-300 px-1 pb-1 border-b-2 border-transparent'
@@ -54,12 +84,17 @@ const Navbar = () => {
       ]
 
   return (
-    <nav className="relative bg-background shadow-sm transition-colors duration-500 px-4 py-4 z-50">
+    <nav
+      className={`fixed top-0 left-0 right-0 bg-background transition-all duration-300 px-4 py-3 z-50 ${
+        scrolled ? 'shadow-md backdrop-blur-sm bg-opacity-90' : 'shadow-sm'
+      }`}
+    >
       <div className="max-w-7xl mx-auto flex items-center justify-between relative">
         {/* Brand */}
         <Link
           to="/"
           className="text-xl sm:text-2xl font-extrabold tracking-tight text-primary dark:text-primary hover:opacity-90 transition-opacity"
+          onClick={handleSmoothScroll}
         >
           FarewellFrame
         </Link>
@@ -71,6 +106,7 @@ const Navbar = () => {
               key={to}
               to={to}
               end={to === '/'}
+              onClick={handleSmoothScroll}
               className={({ isActive }) =>
                 [
                   baseLink,
@@ -92,10 +128,11 @@ const Navbar = () => {
                 Profile
               </button>
               {/* Simple dropdown on hover */}
-              <div className="absolute right-0 mt-2 w-40 rounded shadow-lg   opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none group-hover:pointer-events-auto z-50">
+              <div className="absolute right-0 mt-2 w-40 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none group-hover:pointer-events-auto z-50">
                 <Link
                   to="/profile"
                   className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  onClick={handleSmoothScroll}
                 >
                   My Profile
                 </Link>
@@ -107,9 +144,10 @@ const Navbar = () => {
           ) : (
             <div className="flex items-center gap-2">
               <Link
-                to="/login"
+                to="/auth"
                 className="block px-4 py-2 text-sm font-medium rounded-md bg-button text-text-primary 
              hover:bg-primary/90 transition-colors duration-200"
+                onClick={handleSmoothScroll}
               >
                 Login
               </Link>
@@ -142,14 +180,14 @@ const Navbar = () => {
       {mobileOpen && (
         <div
           ref={menuRef}
-          className="md:hidden absolute right-4 top-16 z-50 bg-background dark:bg-gray-800 shadow-lg rounded-lg py-2 px-4 space-y-2 min-w-[12rem] transition-all duration-300"
+          className="md:hidden fixed right-4 top-16 z-50 bg-background dark:bg-gray-800 shadow-lg rounded-lg py-2 px-4 space-y-2 min-w-[12rem] transition-all duration-300"
         >
           {navLinks.map(({ to, label }) => (
             <NavLink
               key={to}
               to={to}
               end={to === '/'}
-              onClick={() => setMobileOpen(false)}
+              onClick={handleSmoothScroll}
               className={({ isActive }) =>
                 [
                   'block px-3 py-2 rounded text-sm font-medium transition-colors',
@@ -171,6 +209,7 @@ const Navbar = () => {
                 <Link
                   to="/profile"
                   className="block px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
+                  onClick={handleSmoothScroll}
                 >
                   My Profile
                 </Link>
@@ -181,9 +220,10 @@ const Navbar = () => {
             ) : (
               <div className="mt-2 space-y-1">
                 <Link
-                  to="/login"
+                  to="/auth"
                   className="block px-4 py-2 text-sm font-medium rounded-md bg-button text-gray-900 dark:text-text-primary 
              hover:bg-primary/90 dark:hover:bg-primary/90 transition-colors duration-200"
+                  onClick={handleSmoothScroll}
                 >
                   Login
                 </Link>

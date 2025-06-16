@@ -4,6 +4,8 @@ import { useSelector } from 'react-redux'
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
 import Hero from './components/Hero'
 import Navbar from './components/Navbar'
+import AuthPage from './pages/Authentication'
+import ForgotPassword from './pages/ForgotPassword'
 
 function App() {
   const mode = useSelector((state) => state.theme.mode)
@@ -38,6 +40,8 @@ function App() {
         <div className="p-4">
           <Routes>
             <Route path="/" element={<Hero />} />
+            <Route path="/auth" element={<AuthPage />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
             {/* Add other routes here */}
             {/* <Route path="/upload" element={<Upload />} />
             <Route path="/gallery" element={<Gallery />} />
