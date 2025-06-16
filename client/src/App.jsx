@@ -31,7 +31,7 @@ function App() {
 
   return (
     <Router>
-      <div className="bg-white dark:bg-gray-900 min-h-screen text-gray-900 dark:text-gray-100 transition-colors duration-200">
+      <div className="bg-background dark:bg-background min-h-screen text-primary dark:text-primary transition-colors duration-500">
         <Navbar />
         <div className="p-4">
           <Routes></Routes>

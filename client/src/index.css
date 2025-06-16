@@ -1,2 +1,45 @@
 @import 'tailwindcss';
 @custom-variant dark (&:where(.dark, .dark *));
+
+html,
+body {
+  transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+:root {
+  --color-primary: #f97316; /* orange-400 */
+  --color-background: #f9fafb; /* gray-50 */
+  --color-text-primary: #1f2937; /* gray-800 */
+  --color-text-secondary: #4b5563; /* gray-600 */
+  --color-button-bg: #fb923c; /* orange-400 */
+  --color-border: #d1d5db; /* gray-300 */
+}
+
+/* Dark mode overrides */
+.dark {
+  --color-primary: #f97316; /* orange-500 */
+  --color-background: #111827; /* gray-900 */
+  --color-text-primary: #f3f4f6; /* gray-100 */
+  --color-text-secondary: #9ca3af; /* gray-400 */
+  --color-button-bg: #ea580c; /* orange-600 */
+  --color-border: #374151; /* gray-700 */
+}
+
+.text-primary {
+  color: var(--color-primary);
+}
+.bg-primary {
+  background-color: var(--color-primary);
+}
+.text-secondary {
+  color: var(--color-text-secondary);
+}
+.bg-background {
+  background-color: var(--color-background);
+}
+.text-text-primary {
+  color: var(--color-text-primary);
+}
+.text-text-secondary {
+  color: var(--color-text-secondary);
+}

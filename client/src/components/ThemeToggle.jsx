@@ -10,14 +10,16 @@ const ThemeToggle = () => {
   return (
     <button
       onClick={() => dispatch(toggleTheme())}
-      className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+      className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-300 ease-in-out"
       aria-label="Toggle Theme"
     >
-      {mode === 'dark' ? (
-        <Sun className="w-5 h-5 text-yellow-400" />
-      ) : (
-        <Moon className="w-5 h-5 text-gray-800" />
-      )}
+      <div className="transition-transform duration-500 ease-in-out transform hover:rotate-180">
+        {mode === 'dark' ? (
+          <Sun className="w-5 h-5 text-primary" />
+        ) : (
+          <Moon className="w-5 h-5 text-gray-800" />
+        )}
+      </div>
     </button>
   )
 }
