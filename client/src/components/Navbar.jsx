@@ -12,7 +12,7 @@ const Navbar = () => {
   const menuRef = useRef(null)
   const profileRef = useRef(null)
 
-  const user = useSelector((state) => state.auth.user)
+  const { user } = useSelector((state) => state.auth)
   const isLoggedIn = Boolean(user)
   const dispatch = useDispatch()
   const navigate = useNavigate()
