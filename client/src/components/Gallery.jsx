@@ -245,7 +245,7 @@ const Gallery = () => {
         transition={{ duration: 0.6 }}
         className="text-4xl font-bold text-center text-primary"
       >
-        🎓 Student Gallery
+        🎓 Gallery
       </motion.h1>
 
       {/* 🔍 Filters */}
@@ -328,27 +328,37 @@ const Gallery = () => {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+        {' '}
         {filtered.map((student, idx) => (
           <motion.div
             key={idx}
-            whileHover={{ scale: 1.03 }}
-            className="bg-card dark:bg-card-dark rounded-xl shadow-lg overflow-hidden transition-transform border border-border"
+            initial={{ opacity: 0, y: 30, scale: 0.95 }}
+            whileInView={{ opacity: 1, y: 0, scale: 1 }}
+            whileHover={{ scale: 1.05, rotate: 0.5 }}
+            transition={{ delay: idx * 0.05, duration: 0.6, ease: 'easeOut' }}
+            className="relative bg-card dark:bg-card-dark rounded-xl shadow-2xl overflow-hidden border border-border group hover:border-primary transition-all duration-500"
           >
-            <img
-              src={student.imageUrl}
-              alt={student.name}
-              className="w-full h-60 object-cover object-center hover:scale-105 transition-transform duration-300"
-            />
-            <div className="p-4 text-center">
-              <h3 className="text-xl font-semibold text-primary mb-1">
+            {/* Image */}
+            <div className="overflow-hidden">
+              <img
+                src={student.imageUrl}
+                alt={student.name}
+                className="w-full h-60 object-cover object-center group-hover:scale-110 transition-transform duration-500 ease-in-out"
+              />
+            </div>
+
+            {/* Content */}
+            <div className="p-4 text-center space-y-2 relative">
+              <h3 className="text-xl font-bold text-primary tracking-wide group-hover:text-accent transition-colors duration-300">
                 {student.name}
               </h3>
-              <p className="text-sm text-text-secondary italic">
-                {student.department} - {student.year}
+
+              <p className="mt-2 text-text-secondary text-sm line-clamp-3 leading-relaxed">
+                “{student.lastWords}”
               </p>
-              <p className="mt-2 text-text-secondary text-sm line-clamp-3">
-                "{student.lastWords}"
-              </p>
+
+              {/* Glow border overlay */}
+              <div className="absolute inset-0 rounded-xl pointer-events-none group-hover:shadow-[0_0_20px_3px_rgba(255,165,0,0.3)] transition duration-500" />
             </div>
           </motion.div>
         ))}
