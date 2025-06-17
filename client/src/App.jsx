@@ -7,6 +7,7 @@ import Navbar from './components/Navbar'
 import Toast from './components/Toast'
 import AuthPage from './pages/Authentication'
 import ForgotPassword from './pages/ForgotPassword'
+import NotFound from './pages/NotFound'
 import ResetPassword from './pages/ResetPass'
 import VerifyEmail from './pages/VerifyEmail'
 
@@ -48,6 +49,7 @@ function App() {
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/verify-email/:token" element={<VerifyEmail />} />
             <Route path="/reset-password/:token" element={<ResetPassword />} />
+            <Route path="*" element={<NotFound />} />
 
             {/* Add other routes here */}
             {/* <Route path="/upload" element={<Upload />} />
