@@ -158,7 +158,7 @@ const sendEmailUpdateVerification = async (email, verificationToken) => {
 
 // Function to send reset password email
 const sendResetPasswordEmail = async (email, token) => {
-  const resetUrl = `http://localhost:5173/reset-password?token=${token}`
+  const resetUrl = `http://localhost:5173/reset-password/${token}`
   const subject = 'Secure Password Reset - Online Donation Platform'
 
   const html = `

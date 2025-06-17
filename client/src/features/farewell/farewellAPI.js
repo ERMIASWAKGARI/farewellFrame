@@ -19,3 +19,29 @@ export const verifyEmail = async (token) => {
   console.log('verify email response:', response)
   return response.data
 }
+
+export const resendVerificationEmail = async (email) => {
+  const response = await axios.post(
+    `${API_BASE_URL}/auth/resend-verification-email`,
+    {
+      email,
+    }
+  )
+  return response.data
+}
+
+export const forgotPassword = async (email) => {
+  const response = await axios.post(`${API_BASE_URL}/auth/forgot-password`, {
+    email,
+  })
+  return response.data
+}
+
+export const resetPassword = async (token, password) => {
+  const response = await axios.post(`${API_BASE_URL}/auth/reset-password`, {
+    token,
+    password,
+  })
+  console.log('reset password response:', response)
+  return response.data
+}

@@ -4,8 +4,10 @@ import { useSelector } from 'react-redux'
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
 import Hero from './components/Hero'
 import Navbar from './components/Navbar'
+import Toast from './components/Toast'
 import AuthPage from './pages/Authentication'
 import ForgotPassword from './pages/ForgotPassword'
+import ResetPassword from './pages/ResetPass'
 import VerifyEmail from './pages/VerifyEmail'
 
 function App() {
@@ -39,11 +41,13 @@ function App() {
       <div className="bg-background dark:bg-background min-h-screen text-primary dark:text-primary transition-colors duration-500">
         <Navbar />
         <div className="p-4">
+          <Toast />
           <Routes>
             <Route path="/" element={<Hero />} />
             <Route path="/auth" element={<AuthPage />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/verify-email/:token" element={<VerifyEmail />} />
+            <Route path="/reset-password/:token" element={<ResetPassword />} />
 
             {/* Add other routes here */}
             {/* <Route path="/upload" element={<Upload />} />

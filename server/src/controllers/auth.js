@@ -2,7 +2,10 @@ const bcrypt = require('bcryptjs')
 const crypto = require('crypto')
 const User = require('../models/User')
 const jwt = require('jsonwebtoken')
-const { sendVerificationEmail } = require('../utils/emailService')
+const {
+  sendVerificationEmail,
+  sendResetPasswordEmail,
+} = require('../utils/emailService')
 
 const register = async (req, res) => {
   const { email, password } = req.body
@@ -126,8 +129,103 @@ const login = async (req, res) => {
   }
 }
 
+const resendVerificationEmail = async (req, res) => {
+  const { email } = req.body
+  console.log('Resending verification email to:', email)
+
+  try {
+    if (!email) {
+      return res.status(400).json({ message: 'Email is required.' })
+    }
+
+    const user = await User.findOne({ email })
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found.' })
+    }
+
+    if (user.isVerified) {
+      return res
+        .status(400)
+        .json({ message: 'User is already verified. Please log in.' })
+    }
+
+    // Generate a new token and save it
+    const verificationToken = crypto.randomBytes(32).toString('hex')
+
+    // Store it in the DB
+    user.verificationToken = verificationToken
+    await user.save()
+
+    // Send email
+    await sendVerificationEmail(user.email, verificationToken)
+
+    res.status(200).json({
+      message: 'Verification email resent. Please check your inbox.',
+    })
+  } catch (err) {
+    console.error('Error resending verification email:', err.message)
+    res
+      .status(500)
+      .json({ message: 'Something went wrong. Please try again later.' })
+  }
+}
+
+const forgotPassword = async (req, res) => {
+  const { email } = req.body
+  try {
+    const user = await User.findOne({ email })
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' })
+    }
+
+    const token = crypto.randomBytes(32).toString('hex')
+    const hashedToken = crypto.createHash('sha256').update(token).digest('hex')
+
+    user.resetPasswordToken = hashedToken
+    user.resetPasswordExpires = Date.now() + 15 * 60 * 1000 // 15 min
+    await user.save()
+
+    const resetLink = `http://localhost:5173/reset-password?token=${token}`
+    await sendResetPasswordEmail(email, token)
+
+    res.status(200).json({ message: 'Reset link sent to email' })
+  } catch (err) {
+    res.status(500).json({ message: 'Server error', error: err.message })
+  }
+}
+
+const resetPassword = async (req, res) => {
+  const { token, password } = req.body
+
+  const hashedToken = crypto.createHash('sha256').update(token).digest('hex')
+
+  try {
+    const user = await User.findOne({
+      resetPasswordToken: hashedToken,
+      resetPasswordExpires: { $gt: Date.now() },
+    })
+
+    if (!user) {
+      return res.status(400).json({ message: 'Token is invalid or expired' })
+    }
+
+    user.password = await bcrypt.hash(password, 10)
+    user.resetPasswordToken = undefined
+    user.resetPasswordExpires = undefined
+    await user.save()
+
+    res.status(200).json({ message: 'Password reset successful' })
+  } catch (err) {
+    res.status(500).json({ message: 'Server error', error: err.message })
+  }
+}
+
 module.exports = {
   register,
   verifyEmail,
   login,
+  resendVerificationEmail,
+  forgotPassword,
+  resetPassword,
 }
