@@ -55,7 +55,15 @@ const HeroSection = () => {
   }, [])
 
   return (
-    <section className="relative min-h-[100vh] overflow-hidden flex flex-col items-center justify-center text-center px-6 pt-24 pb-16 mt-16 bg-background">
+    <section
+      className="relative min-h-screen overflow-hidden flex flex-col items-center justify-center text-center 
+             px-4 sm:px-6 lg:px-12 
+             pt-20 sm:pt-24 lg:pt-32 
+             pb-8 sm:pb-12 lg:pb-16 
+             mt-12 sm:mt-16 lg:mt-24 
+             bg-background"
+    >
+      {' '}
       {/* 🌈 Background Floating SVGs */}
       <motion.img
         src="/graduation-hats-animate.svg"
@@ -81,7 +89,6 @@ const HeroSection = () => {
         custom={2}
         animate="animate"
       />
-
       {/* 🧠 Main Content */}
       <div className="z-10 max-w-5xl w-full flex flex-col items-center justify-center">
         <motion.h1
@@ -110,7 +117,6 @@ const HeroSection = () => {
           </Link>
         </div>
       </div>
-
       {/* 💌 Floating Message Card */}
       <div className="z-10 mt-20 w-full flex justify-center">
         <AnimatePresence mode="wait">

@@ -49,3 +49,12 @@ body {
 .bg-button {
   background-color: var(--color-button-bg);
 }
+
+@keyframes glowSweep {
+  0% {
+    left: -30%;
+  }
+  100% {
+    left: 130%;
+  }
+}

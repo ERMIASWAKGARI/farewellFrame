@@ -1,3 +1,4 @@
+import About from '../components/About'
 import Gallery from '../components/Gallery'
 import Hero from '../components/Hero'
 
@@ -6,6 +7,7 @@ const Home = () => {
     <div className="space-y-10">
       <Hero />
       <Gallery />
+      <About />
     </div>
   )
 }
