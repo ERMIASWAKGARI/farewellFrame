@@ -55,7 +55,7 @@ const HeroSection = () => {
   }, [])
 
   return (
-    <section className="relative min-h-[100vh] overflow-hidden flex flex-col items-center justify-center text-center px-6 pt-24 pb-32 mt-16 bg-background">
+    <section className="relative min-h-[100vh] overflow-hidden flex flex-col items-center justify-center text-center px-6 pt-24 pb-16 mt-16 bg-background">
       {/* 🌈 Background Floating SVGs */}
       <motion.img
         src="/graduation-hats-animate.svg"

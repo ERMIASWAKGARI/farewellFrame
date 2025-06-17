@@ -2,11 +2,11 @@ import { useEffect } from 'react'
 
 import { useSelector } from 'react-redux'
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
-import Hero from './components/Hero'
 import Navbar from './components/Navbar'
 import Toast from './components/Toast'
 import AuthPage from './pages/Authentication'
 import ForgotPassword from './pages/ForgotPassword'
+import Home from './pages/Home' // Add this line at the top
 import NotFound from './pages/NotFound'
 import ResetPassword from './pages/ResetPass'
 import VerifyEmail from './pages/VerifyEmail'
@@ -44,16 +44,16 @@ function App() {
         <div className="p-4">
           <Toast />
           <Routes>
-            <Route path="/" element={<Hero />} />
+            <Route path="/" element={<Home />} />
             <Route path="/auth" element={<AuthPage />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/verify-email/:token" element={<VerifyEmail />} />
             <Route path="/reset-password/:token" element={<ResetPassword />} />
+
             <Route path="*" element={<NotFound />} />
 
             {/* Add other routes here */}
             {/* <Route path="/upload" element={<Upload />} />
-            <Route path="/gallery" element={<Gallery />} />
             <Route path="/about" element={<About />} /> */}
           </Routes>
         </div>
