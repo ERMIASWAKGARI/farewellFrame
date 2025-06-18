@@ -1,79 +1,182 @@
-const EditorToolbar = ({ editor, onEmojiClick, showTextAlign }) => (
-  <div className="flex bg-white shadow-lg rounded-md p-1">
-    <button
-      onClick={() => editor.chain().focus().toggleBold().run()}
-      className={`p-1 rounded ${editor.isActive('bold') ? 'bg-gray-200' : ''}`}
-    >
-      <span className="font-bold">B</span>
-    </button>
-    <button
-      onClick={() => editor.chain().focus().toggleItalic().run()}
-      className={`p-1 rounded ${
-        editor.isActive('italic') ? 'bg-gray-200' : ''
-      }`}
-    >
-      <span className="italic">I</span>
-    </button>
-    <button
-      onClick={() => editor.chain().focus().toggleUnderline().run()}
-      className={`p-1 rounded ${
-        editor.isActive('underline') ? 'bg-gray-200' : ''
-      }`}
-    >
-      <span className="underline">U</span>
-    </button>
+import {
+  AlignCenterIcon,
+  AlignLeftIcon,
+  AlignRightIcon,
+  BoldIcon,
+  CodeIcon,
+  ItalicIcon,
+  LinkIcon,
+  ListIcon,
+  ListOrderedIcon,
+  SmileIcon,
+  StrikethroughIcon,
+  UnderlineIcon,
+} from 'lucide-react'
 
-    {showTextAlign && (
-      <>
-        <button
-          onClick={() => editor.chain().focus().setTextAlign('left').run()}
-          className={`p-1 rounded ${
-            editor.isActive({ textAlign: 'left' }) ? 'bg-gray-200' : ''
-          }`}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-4 w-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M3 10h18M3 14h18M3 18h18M3 6h18"
-            />
-          </svg>
-        </button>
-        <button
-          onClick={() => editor.chain().focus().setTextAlign('center').run()}
-          className={`p-1 rounded ${
-            editor.isActive({ textAlign: 'center' }) ? 'bg-gray-200' : ''
-          }`}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-4 w-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M3 10h18M3 14h18M3 18h18M3 6h18"
-            />
-          </svg>
-        </button>
-      </>
-    )}
+const EditorToolbar = ({
+  editor,
+  onEmojiClick,
+  showTextAlign = false,
+  variant = 'floating',
+}) => {
+  if (!editor) return null
 
-    <button onClick={onEmojiClick} className="p-1 rounded">
-      😊
-    </button>
-  </div>
+  const base = `p-1.5 sm:p-2 rounded transition-colors`
+  const bubbleStyle =
+    'bg-white hover:bg-gray-100 text-gray-800 shadow-lg border border-gray-200'
+  const floatingStyle =
+    'bg-gray-100 hover:bg-gray-200 text-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200'
+
+  const buttonClasses = `${base} ${
+    variant === 'bubble' ? bubbleStyle : floatingStyle
+  }`
+  const activeClasses =
+    variant === 'bubble'
+      ? 'bg-primary-100 text-primary-800'
+      : 'bg-primary-500/20 text-primary-600 dark:text-primary-400'
+
+  const iconSize = 'w-4 h-4 sm:w-5 sm:h-5'
+
+  return (
+    <div
+      className={`flex flex-wrap items-center gap-1 ${
+        variant === 'bubble' ? 'p-1' : 'p-2'
+      } rounded-md`}
+    >
+      <ToolbarButton
+        title="Bold"
+        active={editor.isActive('bold')}
+        onClick={() => editor.chain().focus().toggleBold().run()}
+        icon={<BoldIcon className={iconSize} />}
+        className={`${buttonClasses} ${
+          editor.isActive('bold') ? activeClasses : ''
+        }`}
+      />
+      <ToolbarButton
+        title="Italic"
+        active={editor.isActive('italic')}
+        onClick={() => editor.chain().focus().toggleItalic().run()}
+        icon={<ItalicIcon className={iconSize} />}
+        className={`${buttonClasses} ${
+          editor.isActive('italic') ? activeClasses : ''
+        }`}
+      />
+      <ToolbarButton
+        title="Underline"
+        active={editor.isActive('underline')}
+        onClick={() => editor.chain().focus().toggleUnderline().run()}
+        icon={<UnderlineIcon className={iconSize} />}
+        className={`${buttonClasses} ${
+          editor.isActive('underline') ? activeClasses : ''
+        }`}
+      />
+      <ToolbarButton
+        title="Strikethrough"
+        active={editor.isActive('strike')}
+        onClick={() => editor.chain().focus().toggleStrike().run()}
+        icon={<StrikethroughIcon className={iconSize} />}
+        className={`${buttonClasses} ${
+          editor.isActive('strike') ? activeClasses : ''
+        }`}
+      />
+
+      {showTextAlign && (
+        <>
+          <ToolbarButton
+            title="Align left"
+            active={editor.isActive({ textAlign: 'left' })}
+            onClick={() => editor.chain().focus().setTextAlign('left').run()}
+            icon={<AlignLeftIcon className={iconSize} />}
+            className={`${buttonClasses} ${
+              editor.isActive({ textAlign: 'left' }) ? activeClasses : ''
+            }`}
+          />
+          <ToolbarButton
+            title="Align center"
+            active={editor.isActive({ textAlign: 'center' })}
+            onClick={() => editor.chain().focus().setTextAlign('center').run()}
+            icon={<AlignCenterIcon className={iconSize} />}
+            className={`${buttonClasses} ${
+              editor.isActive({ textAlign: 'center' }) ? activeClasses : ''
+            }`}
+          />
+          <ToolbarButton
+            title="Align right"
+            active={editor.isActive({ textAlign: 'right' })}
+            onClick={() => editor.chain().focus().setTextAlign('right').run()}
+            icon={<AlignRightIcon className={iconSize} />}
+            className={`${buttonClasses} ${
+              editor.isActive({ textAlign: 'right' }) ? activeClasses : ''
+            }`}
+          />
+        </>
+      )}
+
+      <ToolbarButton
+        title="Bullet list"
+        active={editor.isActive('bulletList')}
+        onClick={() => editor.chain().focus().toggleBulletList().run()}
+        icon={<ListIcon className={iconSize} />}
+        className={`${buttonClasses} ${
+          editor.isActive('bulletList') ? activeClasses : ''
+        }`}
+      />
+      <ToolbarButton
+        title="Numbered list"
+        active={editor.isActive('orderedList')}
+        onClick={() => editor.chain().focus().toggleOrderedList().run()}
+        icon={<ListOrderedIcon className={iconSize} />}
+        className={`${buttonClasses} ${
+          editor.isActive('orderedList') ? activeClasses : ''
+        }`}
+      />
+      <ToolbarButton
+        title="Code"
+        active={editor.isActive('code')}
+        onClick={() => editor.chain().focus().toggleCode().run()}
+        icon={<CodeIcon className={iconSize} />}
+        className={`${buttonClasses} ${
+          editor.isActive('code') ? activeClasses : ''
+        }`}
+      />
+
+      <ToolbarButton
+        title="Link"
+        onClick={() => {
+          const previousUrl = editor.getAttributes('link').href
+          const url = window.prompt('URL', previousUrl)
+          if (url === null) return
+          if (url === '') {
+            editor.chain().focus().extendMarkRange('link').unsetLink().run()
+            return
+          }
+          editor
+            .chain()
+            .focus()
+            .extendMarkRange('link')
+            .setLink({ href: url })
+            .run()
+        }}
+        icon={<LinkIcon className={iconSize} />}
+        className={`${buttonClasses} ${
+          editor.isActive('link') ? activeClasses : ''
+        }`}
+      />
+
+      <ToolbarButton
+        title="Emoji"
+        onClick={onEmojiClick}
+        icon={<SmileIcon className={iconSize} />}
+        className={buttonClasses}
+      />
+    </div>
+  )
+}
+
+const ToolbarButton = ({ onClick, icon, className, title }) => (
+  <button type="button" onClick={onClick} className={className} title={title}>
+    {icon}
+  </button>
 )
 
 export default EditorToolbar
