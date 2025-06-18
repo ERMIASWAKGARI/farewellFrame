@@ -13,41 +13,20 @@ import {
   UnderlineIcon,
 } from 'lucide-react'
 
-const EditorToolbar = ({
-  editor,
-  onEmojiClick,
-  showTextAlign = false,
-  variant = 'floating',
-}) => {
+const EditorToolbar = ({ editor, onEmojiClick, showTextAlign = false }) => {
   if (!editor) return null
 
-  const base = `p-1.5 sm:p-2 rounded transition-colors`
-  const bubbleStyle =
-    'bg-white hover:bg-gray-100 text-gray-800 shadow-lg border border-gray-200'
-  const floatingStyle =
-    'bg-gray-100 hover:bg-gray-200 text-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200'
-
-  const buttonClasses = `${base} ${
-    variant === 'bubble' ? bubbleStyle : floatingStyle
-  }`
+  const buttonClasses = `p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors`
   const activeClasses =
-    variant === 'bubble'
-      ? 'bg-primary-100 text-primary-800'
-      : 'bg-primary-500/20 text-primary-600 dark:text-primary-400'
-
-  const iconSize = 'w-4 h-4 sm:w-5 sm:h-5'
+    'bg-primary-100 text-primary-700 dark:bg-primary-900/30 dark:text-primary-400'
 
   return (
-    <div
-      className={`flex flex-wrap items-center gap-1 ${
-        variant === 'bubble' ? 'p-1' : 'p-2'
-      } rounded-md`}
-    >
+    <div className="flex flex-wrap items-center gap-1">
       <ToolbarButton
         title="Bold"
         active={editor.isActive('bold')}
         onClick={() => editor.chain().focus().toggleBold().run()}
-        icon={<BoldIcon className={iconSize} />}
+        icon={<BoldIcon className="w-5 h-5" />}
         className={`${buttonClasses} ${
           editor.isActive('bold') ? activeClasses : ''
         }`}
@@ -56,7 +35,7 @@ const EditorToolbar = ({
         title="Italic"
         active={editor.isActive('italic')}
         onClick={() => editor.chain().focus().toggleItalic().run()}
-        icon={<ItalicIcon className={iconSize} />}
+        icon={<ItalicIcon className="w-5 h-5" />}
         className={`${buttonClasses} ${
           editor.isActive('italic') ? activeClasses : ''
         }`}
@@ -65,7 +44,7 @@ const EditorToolbar = ({
         title="Underline"
         active={editor.isActive('underline')}
         onClick={() => editor.chain().focus().toggleUnderline().run()}
-        icon={<UnderlineIcon className={iconSize} />}
+        icon={<UnderlineIcon className="w-5 h-5" />}
         className={`${buttonClasses} ${
           editor.isActive('underline') ? activeClasses : ''
         }`}
@@ -74,7 +53,7 @@ const EditorToolbar = ({
         title="Strikethrough"
         active={editor.isActive('strike')}
         onClick={() => editor.chain().focus().toggleStrike().run()}
-        icon={<StrikethroughIcon className={iconSize} />}
+        icon={<StrikethroughIcon className="w-5 h-5" />}
         className={`${buttonClasses} ${
           editor.isActive('strike') ? activeClasses : ''
         }`}
@@ -86,7 +65,7 @@ const EditorToolbar = ({
             title="Align left"
             active={editor.isActive({ textAlign: 'left' })}
             onClick={() => editor.chain().focus().setTextAlign('left').run()}
-            icon={<AlignLeftIcon className={iconSize} />}
+            icon={<AlignLeftIcon className="w-5 h-5" />}
             className={`${buttonClasses} ${
               editor.isActive({ textAlign: 'left' }) ? activeClasses : ''
             }`}
@@ -95,7 +74,7 @@ const EditorToolbar = ({
             title="Align center"
             active={editor.isActive({ textAlign: 'center' })}
             onClick={() => editor.chain().focus().setTextAlign('center').run()}
-            icon={<AlignCenterIcon className={iconSize} />}
+            icon={<AlignCenterIcon className="w-5 h-5" />}
             className={`${buttonClasses} ${
               editor.isActive({ textAlign: 'center' }) ? activeClasses : ''
             }`}
@@ -104,7 +83,7 @@ const EditorToolbar = ({
             title="Align right"
             active={editor.isActive({ textAlign: 'right' })}
             onClick={() => editor.chain().focus().setTextAlign('right').run()}
-            icon={<AlignRightIcon className={iconSize} />}
+            icon={<AlignRightIcon className="w-5 h-5" />}
             className={`${buttonClasses} ${
               editor.isActive({ textAlign: 'right' }) ? activeClasses : ''
             }`}
@@ -116,7 +95,7 @@ const EditorToolbar = ({
         title="Bullet list"
         active={editor.isActive('bulletList')}
         onClick={() => editor.chain().focus().toggleBulletList().run()}
-        icon={<ListIcon className={iconSize} />}
+        icon={<ListIcon className="w-5 h-5" />}
         className={`${buttonClasses} ${
           editor.isActive('bulletList') ? activeClasses : ''
         }`}
@@ -125,7 +104,7 @@ const EditorToolbar = ({
         title="Numbered list"
         active={editor.isActive('orderedList')}
         onClick={() => editor.chain().focus().toggleOrderedList().run()}
-        icon={<ListOrderedIcon className={iconSize} />}
+        icon={<ListOrderedIcon className="w-5 h-5" />}
         className={`${buttonClasses} ${
           editor.isActive('orderedList') ? activeClasses : ''
         }`}
@@ -134,7 +113,7 @@ const EditorToolbar = ({
         title="Code"
         active={editor.isActive('code')}
         onClick={() => editor.chain().focus().toggleCode().run()}
-        icon={<CodeIcon className={iconSize} />}
+        icon={<CodeIcon className="w-5 h-5" />}
         className={`${buttonClasses} ${
           editor.isActive('code') ? activeClasses : ''
         }`}
@@ -157,7 +136,7 @@ const EditorToolbar = ({
             .setLink({ href: url })
             .run()
         }}
-        icon={<LinkIcon className={iconSize} />}
+        icon={<LinkIcon className="w-5 h-5" />}
         className={`${buttonClasses} ${
           editor.isActive('link') ? activeClasses : ''
         }`}
@@ -166,15 +145,21 @@ const EditorToolbar = ({
       <ToolbarButton
         title="Emoji"
         onClick={onEmojiClick}
-        icon={<SmileIcon className={iconSize} />}
+        icon={<SmileIcon className="w-5 h-5" />}
         className={buttonClasses}
       />
     </div>
   )
 }
 
-const ToolbarButton = ({ onClick, icon, className, title }) => (
-  <button type="button" onClick={onClick} className={className} title={title}>
+const ToolbarButton = ({ onClick, icon, className, title, active }) => (
+  <button
+    type="button"
+    onClick={onClick}
+    className={className}
+    title={title}
+    aria-pressed={active}
+  >
     {icon}
   </button>
 )

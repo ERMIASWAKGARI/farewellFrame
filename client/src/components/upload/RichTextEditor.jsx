@@ -1,4 +1,4 @@
-import { BubbleMenu, EditorContent, FloatingMenu } from '@tiptap/react'
+import { EditorContent } from '@tiptap/react'
 import { useEffect, useState } from 'react'
 import EditorToolbar from './EditorToolbar'
 
@@ -6,9 +6,7 @@ const RichTextEditor = ({
   label,
   editor,
   onEmojiClick,
-  minHeight = '8rem',
   showTextAlign = false,
-  toolbarPosition = 'both', // 'both', 'bubble', or 'floating'
   borderColor = 'border-gray-200 dark:border-gray-600',
   bgColor = 'bg-white dark:bg-gray-800',
   textColor = 'text-gray-800 dark:text-gray-100',
@@ -49,45 +47,25 @@ const RichTextEditor = ({
 
       <div
         className={`relative ${bgColor} ${rounded} ${shadow} border ${borderColor} transition-all duration-300 ${
-          isFocused
-            ? 'ring-2 ring-primary-500/40 border-primary-500 scale-[1.01]'
-            : ''
+          isFocused ? 'ring-2 ring-primary-500/40 border-primary-500' : ''
         }`}
       >
-        {toolbarPosition !== 'bubble' && editor && (
-          <FloatingMenu
+        {/* Always Visible Toolbar */}
+        <div className="border-b border-gray-100 dark:border-gray-700 p-2">
+          <EditorToolbar
             editor={editor}
-            tippyOptions={{ duration: 100, placement: 'top-start' }}
-            className="z-20 px-2 pt-2"
-          >
-            <EditorToolbar
-              editor={editor}
-              onEmojiClick={onEmojiClick}
-              showTextAlign={showTextAlign}
-              variant="floating"
-            />
-          </FloatingMenu>
-        )}
+            onEmojiClick={onEmojiClick}
+            showTextAlign={showTextAlign}
+          />
+        </div>
 
-        {toolbarPosition !== 'floating' && editor && (
-          <BubbleMenu
+        {/* Editor Content - Expanded to fill space */}
+        <div className="p-4">
+          <EditorContent
             editor={editor}
-            tippyOptions={{ duration: 100 }}
-            className="z-20"
-          >
-            <EditorToolbar
-              editor={editor}
-              onEmojiClick={onEmojiClick}
-              showTextAlign={showTextAlign}
-              variant="bubble"
-            />
-          </BubbleMenu>
-        )}
-
-        <EditorContent
-          editor={editor}
-          className={`min-h-[${minHeight}] p-4 focus:outline-none prose prose-sm dark:prose-invert max-w-none ${textColor} ${placeholderColor}`}
-        />
+            className={`w-full focus:outline-none prose prose-sm dark:prose-invert max-w-none ${textColor} ${placeholderColor}`}
+          />
+        </div>
       </div>
 
       <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 px-1">
