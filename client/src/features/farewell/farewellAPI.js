@@ -45,3 +45,21 @@ export const resetPassword = async (token, password) => {
   console.log('reset password response:', response)
   return response.data
 }
+
+// Add to farewellApi.js
+export const uploadFarewell = async (formData, token) => {
+  console.log('Form data: ', formData.story)
+  const config = {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      Authorization: `Bearer ${token}`,
+    },
+  }
+
+  const response = await axios.post(
+    `${API_BASE_URL}/farewells/create`,
+    formData,
+    config
+  )
+  return response.data
+}

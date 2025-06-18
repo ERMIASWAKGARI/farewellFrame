@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 const cors = require('cors')
 require('dotenv').config()
 const authRoutes = require('./routes/auth')
+const farewellRoutes = require('./routes/farewell')
 
 const app = express()
 
@@ -18,6 +19,7 @@ mongoose
 
 // Routes
 app.use('/api/v1/auth', authRoutes)
+app.use('/api/v1/farewells', farewellRoutes)
 
 // Error handling middleware
 app.use((err, req, res, next) => {

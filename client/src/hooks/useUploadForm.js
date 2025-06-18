@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import Color from '@tiptap/extension-color'
 import Link from '@tiptap/extension-link'
 import Placeholder from '@tiptap/extension-placeholder'
@@ -7,10 +8,13 @@ import Underline from '@tiptap/extension-underline'
 import { useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import { useRef, useState } from 'react'
+import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import { uploadFarewell } from '../features/farewell/farewellAPI'
 
 export const useUploadForm = () => {
   const navigate = useNavigate()
+  const { token } = useSelector((state) => state.auth) // Get token from Redux store
   const [formData, setFormData] = useState({
     name: '',
     department: 'Software Engineering',
@@ -25,6 +29,7 @@ export const useUploadForm = () => {
     top: 0,
     left: 0,
   })
+  const [error, setError] = useState(null)
   const emojiPickerRef = useRef(null)
 
   // Editor configurations
@@ -95,12 +100,41 @@ export const useUploadForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     setUploading(true)
+    setError(null)
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1500))
+      // Create FormData object
+      const formDataToSend = new FormData()
+
+      // Append basic fields
+      formDataToSend.append('name', formData.name)
+      formDataToSend.append('department', formData.department)
+      formDataToSend.append('year', formData.year)
+
+      // Append rich text content
+      formDataToSend.append('lastWords', formData.lastWords)
+      formDataToSend.append('story', formData.story)
+
+      // Append each image file
+      formData.images.forEach((image, index) => {
+        formDataToSend.append('images', image.file)
+      })
+
+      // For debugging - log FormData contents
+      for (let [key, value] of formDataToSend.entries()) {
+        console.log(key, value)
+      }
+
+      // Call API with the FormData
+      await uploadFarewell(formDataToSend, token)
+
+      // Navigate to gallery on success
       navigate('/gallery')
     } catch (error) {
       console.error('Upload failed:', error)
+      setError(
+        error.response?.data?.message || 'Failed to upload. Please try again.'
+      )
     } finally {
       setUploading(false)
     }
