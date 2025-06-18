@@ -9,6 +9,7 @@ import ForgotPassword from './pages/ForgotPassword'
 import Home from './pages/Home' // Add this line at the top
 import NotFound from './pages/NotFound'
 import ResetPassword from './pages/ResetPass'
+import Upload from './pages/Upload'
 import VerifyEmail from './pages/VerifyEmail'
 
 function App() {
@@ -49,12 +50,8 @@ function App() {
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/verify-email/:token" element={<VerifyEmail />} />
             <Route path="/reset-password/:token" element={<ResetPassword />} />
-
+            <Route path="/upload" element={<Upload />} />
             <Route path="*" element={<NotFound />} />
-
-            {/* Add other routes here */}
-            {/* <Route path="/upload" element={<Upload />} />
-            <Route path="/about" element={<About />} /> */}
           </Routes>
         </div>
       </div>
