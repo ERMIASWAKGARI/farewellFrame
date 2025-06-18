@@ -1,213 +1,22 @@
 import { Input, Select } from 'antd'
 // eslint-disable-next-line no-unused-vars
-import { motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
+
+import { ChevronLeft, ChevronRight, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
 const { Search } = Input
 const { Option } = Select
 
-const mockStudents = [
-  {
-    name: 'Hana Tesfaye',
-    department: 'Software Engineering',
-    year: '2025',
-    uploadedAt: '2025-06-15T10:00:00Z',
-    imageUrl: 'https://i.pravatar.cc/300?img=5',
-    lastWords: 'Keep coding, stay curious. Peace out!',
-  },
-  {
-    name: 'Abel Mekonnen',
-    department: 'Civil Engineering',
-    year: '2025',
-    uploadedAt: '2025-06-14T09:00:00Z',
-    imageUrl: 'https://i.pravatar.cc/300?img=10',
-    lastWords: 'May your foundations be strong, literally.',
-  },
-  {
-    name: 'Sara Amanuel',
-    department: 'Electrical Engineering',
-    year: '2025',
-    uploadedAt: '2025-06-13T15:30:00Z',
-    imageUrl: 'https://i.pravatar.cc/300?img=8',
-    lastWords: 'Watt a journey it has been!',
-  },
-  {
-    name: 'Dawit Yared',
-    department: 'Software Engineering',
-    year: '2025',
-    uploadedAt: '2025-06-12T12:00:00Z',
-    imageUrl: 'https://i.pravatar.cc/300?img=15',
-    lastWords: 'Goodbye bugs, hello blessings.',
-  },
-  {
-    name: 'Liya Daniel',
-    department: 'Civil Engineering',
-    year: '2025',
-    uploadedAt: '2025-06-12T08:30:00Z',
-    imageUrl: 'https://i.pravatar.cc/300?img=20',
-    lastWords: 'Bricks and blueprints, we out.',
-  },
-  {
-    name: 'Robel Asnake',
-    department: 'Electrical Engineering',
-    year: '2025',
-    uploadedAt: '2025-06-11T11:00:00Z',
-    imageUrl: 'https://i.pravatar.cc/300?img=22',
-    lastWords: 'Current status: graduated ⚡',
-  },
-  {
-    name: 'Meron Haile',
-    department: 'Software Engineering',
-    year: '2025',
-    uploadedAt: '2025-06-10T10:45:00Z',
-    imageUrl: 'https://i.pravatar.cc/300?img=3',
-    lastWords: 'import Future from "life"; export default Me;',
-  },
-  {
-    name: 'Nahom Tadesse',
-    department: 'Civil Engineering',
-    year: '2025',
-    uploadedAt: '2025-06-10T09:00:00Z',
-    imageUrl: 'https://i.pravatar.cc/300?img=14',
-    lastWords: 'Concrete dreams built.',
-  },
-  {
-    name: 'Bethel Mulu',
-    department: 'Electrical Engineering',
-    year: '2025',
-    uploadedAt: '2025-06-09T17:00:00Z',
-    imageUrl: 'https://i.pravatar.cc/300?img=9',
-    lastWords: 'Shockingly good times. 🔌',
-  },
-  {
-    name: 'Yohannes Desta',
-    department: 'Software Engineering',
-    year: '2025',
-    uploadedAt: '2025-06-09T14:30:00Z',
-    imageUrl: 'https://i.pravatar.cc/300?img=27',
-    lastWords: 'From 404s to dreams found.',
-  },
-  {
-    name: 'Selam Habte',
-    department: 'Civil Engineering',
-    year: '2025',
-    uploadedAt: '2025-06-08T16:00:00Z',
-    imageUrl: 'https://i.pravatar.cc/300?img=12',
-    lastWords: 'We laid the groundwork. Now we soar.',
-  },
-  {
-    name: 'Daniel Girma',
-    department: 'Electrical Engineering',
-    year: '2025',
-    uploadedAt: '2025-06-08T12:00:00Z',
-    imageUrl: 'https://i.pravatar.cc/300?img=19',
-    lastWords: 'Resistance was futile, I graduated.',
-  },
-  {
-    name: 'Rediet Worku',
-    department: 'Software Engineering',
-    year: '2025',
-    uploadedAt: '2025-06-07T10:00:00Z',
-    imageUrl: 'https://i.pravatar.cc/300?img=7',
-    lastWords:
-      'Just a girl standing in front of a terminal asking it to compile.',
-  },
-  {
-    name: 'Kaleab Fikre',
-    department: 'Civil Engineering',
-    year: '2025',
-    uploadedAt: '2025-06-06T13:00:00Z',
-    imageUrl: 'https://i.pravatar.cc/300?img=23',
-    lastWords: 'Blueprints in hand, I walk into the future.',
-  },
-  {
-    name: 'Feven Alemu',
-    department: 'Electrical Engineering',
-    year: '2025',
-    uploadedAt: '2025-06-05T11:30:00Z',
-    imageUrl: 'https://i.pravatar.cc/300?img=26',
-    lastWords: 'Voltage, vibes, and victory.',
-  },
-  {
-    name: 'Mikiyas Terefe',
-    department: 'Software Engineering',
-    year: '2025',
-    uploadedAt: '2025-06-05T09:00:00Z',
-    imageUrl: 'https://i.pravatar.cc/300?img=17',
-    lastWords: 'Ctrl + Alt + Graduate.',
-  },
-  {
-    name: 'Saron Mekbib',
-    department: 'Civil Engineering',
-    year: '2025',
-    uploadedAt: '2025-06-04T16:00:00Z',
-    imageUrl: 'https://i.pravatar.cc/300?img=2',
-    lastWords: 'Bridges crossed, tunnels explored.',
-  },
-  {
-    name: 'Eyob Melaku',
-    department: 'Electrical Engineering',
-    year: '2025',
-    uploadedAt: '2025-06-03T14:30:00Z',
-    imageUrl: 'https://i.pravatar.cc/300?img=29',
-    lastWords: 'AC or DC, I’m free either way.',
-  },
-  {
-    name: 'Hiwot Kebede',
-    department: 'Software Engineering',
-    year: '2025',
-    uploadedAt: '2025-06-02T15:00:00Z',
-    imageUrl: 'https://i.pravatar.cc/300?img=11',
-    lastWords: 'console.log("Goodbye, world");',
-  },
-  {
-    name: 'Samuel Bekele',
-    department: 'Civil Engineering',
-    year: '2025',
-    uploadedAt: '2025-06-01T18:00:00Z',
-    imageUrl: 'https://i.pravatar.cc/300?img=16',
-    lastWords: 'The road ends here — and begins again.',
-  },
-  {
-    name: 'Mahlet Girma',
-    department: 'Electrical Engineering',
-    year: '2025',
-    uploadedAt: '2025-05-31T10:00:00Z',
-    imageUrl: 'https://i.pravatar.cc/300?img=6',
-    lastWords: 'Wired for greatness.',
-  },
-  {
-    name: 'Yonatan Lemma',
-    department: 'Software Engineering',
-    year: '2025',
-    uploadedAt: '2025-05-30T13:00:00Z',
-    imageUrl: 'https://i.pravatar.cc/300?img=4',
-    lastWords: 'Less stress, more success.',
-  },
-  {
-    name: 'Rahel Tsegaye',
-    department: 'Civil Engineering',
-    year: '2025',
-    uploadedAt: '2025-05-29T12:30:00Z',
-    imageUrl: 'https://i.pravatar.cc/300?img=1',
-    lastWords: 'From concrete to completion.',
-  },
-  {
-    name: 'Biniam Zewdu',
-    department: 'Electrical Engineering',
-    year: '2025',
-    uploadedAt: '2025-05-28T17:00:00Z',
-    imageUrl: 'https://i.pravatar.cc/300?img=13',
-    lastWords: 'Graduated without a short circuit.',
-  },
-]
-
+import { mockStudents } from '../components/MockStudents'
 const Gallery = () => {
   const [search, setSearch] = useState('')
   const [department, setDepartment] = useState('Software Engineering')
   const [year, setYear] = useState('2025')
   const [sort, setSort] = useState('newest')
   const [filtered, setFiltered] = useState([])
+  const [selectedStudent, setSelectedStudent] = useState(null)
+  const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
   useEffect(() => {
     let data = [...mockStudents]
@@ -236,6 +45,29 @@ const Gallery = () => {
 
     setFiltered(data)
   }, [search, department, year, sort])
+
+  const openStudentModal = (student) => {
+    setSelectedStudent(student)
+    setCurrentImageIndex(0)
+    document.body.style.overflow = 'hidden'
+  }
+
+  const closeStudentModal = () => {
+    setSelectedStudent(null)
+    document.body.style.overflow = 'auto'
+  }
+
+  const nextImage = () => {
+    setCurrentImageIndex((prev) =>
+      prev === selectedStudent.images.length - 1 ? 0 : prev + 1
+    )
+  }
+
+  const prevImage = () => {
+    setCurrentImageIndex((prev) =>
+      prev === 0 ? selectedStudent.images.length - 1 : prev - 1
+    )
+  }
 
   return (
     <div className="space-y-8 animate-fade-in p-4 md:p-6">
@@ -328,7 +160,6 @@ const Gallery = () => {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
-        {' '}
         {filtered.map((student, idx) => (
           <motion.div
             key={idx}
@@ -336,15 +167,35 @@ const Gallery = () => {
             whileInView={{ opacity: 1, y: 0, scale: 1 }}
             whileHover={{ scale: 1.05, rotate: 0.5 }}
             transition={{ delay: idx * 0.05, duration: 0.6, ease: 'easeOut' }}
-            className="relative bg-card dark:bg-card-dark rounded-xl shadow-2xl overflow-hidden border border-border group hover:border-primary transition-all duration-500"
+            className="relative bg-card dark:bg-card-dark rounded-xl shadow-2xl overflow-hidden border border-border group hover:border-primary transition-all duration-500 cursor-pointer"
+            onClick={() => openStudentModal(student)}
           >
-            {/* Image */}
-            <div className="overflow-hidden">
+            {/* Image with multiple image indicator */}
+            <div className="overflow-hidden relative">
               <img
-                src={student.imageUrl}
+                src={student.images[0]}
                 alt={student.name}
                 className="w-full h-60 object-cover object-center group-hover:scale-110 transition-transform duration-500 ease-in-out"
               />
+              {student.images.length > 1 && (
+                <div className="absolute bottom-2 right-2 bg-black/50 text-white text-xs px-2 py-1 rounded-full flex items-center">
+                  <span className="mr-1">+{student.images.length - 1}</span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-3 w-3"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
+                    />
+                  </svg>
+                </div>
+              )}
             </div>
 
             {/* Content */}
@@ -352,17 +203,178 @@ const Gallery = () => {
               <h3 className="text-xl font-bold text-primary tracking-wide group-hover:text-accent transition-colors duration-300">
                 {student.name}
               </h3>
-
-              <p className="mt-2 text-text-secondary text-sm line-clamp-3 leading-relaxed">
-                “{student.lastWords}”
+              <p className="text-sm text-text-secondary">
+                {student.department} - {student.year}
               </p>
-
-              {/* Glow border overlay */}
-              <div className="absolute inset-0 rounded-xl pointer-events-none group-hover:shadow-[0_0_20px_3px_rgba(255,165,0,0.3)] transition duration-500" />
+              <p className="mt-2 text-text-secondary text-sm line-clamp-3 leading-relaxed italic">
+                "{student.lastWords}"
+              </p>
             </div>
           </motion.div>
         ))}
       </div>
+
+      {/* Student Detail Modal */}
+      <AnimatePresence>
+        {selectedStudent && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={closeStudentModal}
+          >
+            <motion.div
+              initial={{ scale: 0.9, y: 50 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 50 }}
+              transition={{ type: 'spring', damping: 25 }}
+              className="relative bg-background dark:bg-background-dark rounded-2xl shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-hidden flex flex-col md:flex-row"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Close button */}
+              <button
+                onClick={closeStudentModal}
+                className="absolute top-4 right-4 z-10 bg-black/10 hover:bg-black/20 text-white rounded-full p-2 transition-colors"
+              >
+                <X className="w-6 h-6" />
+              </button>
+
+              {/* Image Gallery Section */}
+              <div className="md:w-1/2 h-64 md:h-auto relative bg-gray-100 dark:bg-gray-900 overflow-hidden">
+                {/* Main Image */}
+                <motion.img
+                  key={currentImageIndex}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  src={selectedStudent.images[currentImageIndex]}
+                  alt={selectedStudent.name}
+                  className="w-full h-full object-cover object-center"
+                />
+
+                {/* Navigation Arrows */}
+                {selectedStudent.images.length > 1 && (
+                  <>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        prevImage()
+                      }}
+                      className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 z-10 transition-colors"
+                    >
+                      <ChevronLeft className="w-6 h-6" />
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        nextImage()
+                      }}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 z-10 transition-colors"
+                    >
+                      <ChevronRight className="w-6 h-6" />
+                    </button>
+                  </>
+                )}
+
+                {/* Image Thumbnails */}
+                {selectedStudent.images.length > 1 && (
+                  <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2 px-4">
+                    {selectedStudent.images.map((img, idx) => (
+                      <button
+                        key={idx}
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          setCurrentImageIndex(idx)
+                        }}
+                        className={`w-10 h-10 rounded-md overflow-hidden border-2 transition-all ${
+                          currentImageIndex === idx
+                            ? 'border-primary scale-110'
+                            : 'border-transparent hover:border-white/50'
+                        }`}
+                      >
+                        <img
+                          src={img}
+                          alt=""
+                          className="w-full h-full object-cover"
+                        />
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Content Section */}
+              <div className="md:w-1/2 p-6 md:p-8 overflow-y-auto">
+                <div className="space-y-6">
+                  <div>
+                    <h2 className="text-3xl font-bold text-primary">
+                      {selectedStudent.name}
+                    </h2>
+                    <p className="text-lg text-text-secondary">
+                      {selectedStudent.department} - {selectedStudent.year}
+                    </p>
+                  </div>
+
+                  <div className="bg-primary/10 p-4 rounded-lg border-l-4 border-primary">
+                    <p className="text-lg italic text-text-primary">
+                      "{selectedStudent.lastWords}"
+                    </p>
+                  </div>
+
+                  <div>
+                    <h3 className="text-xl font-semibold text-primary mb-3 flex items-center gap-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                        />
+                      </svg>
+                      My Story
+                    </h3>
+                    <p className="text-text-secondary leading-relaxed">
+                      {selectedStudent.story}
+                    </p>
+                  </div>
+
+                  <div className="pt-4 border-t border-border">
+                    <h4 className="text-sm uppercase tracking-wider text-text-secondary mb-3">
+                      Graduated on{' '}
+                      {new Date(
+                        selectedStudent.uploadedAt
+                      ).toLocaleDateString()}
+                    </h4>
+                    <div className="flex flex-wrap gap-2">
+                      {[
+                        '#Graduation',
+                        '#ClassOf2025',
+                        '#ProudGrad',
+                        '#AlumniLife',
+                      ].map((tag) => (
+                        <span
+                          key={tag}
+                          className="text-xs px-3 py-1 bg-primary/10 text-primary rounded-full"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }
