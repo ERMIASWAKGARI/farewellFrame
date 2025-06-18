@@ -103,32 +103,30 @@ export const useUploadForm = () => {
     setError(null)
 
     try {
-      // Create FormData object
       const formDataToSend = new FormData()
 
-      // Append basic fields
+      // Append text fields
       formDataToSend.append('name', formData.name)
       formDataToSend.append('department', formData.department)
       formDataToSend.append('year', formData.year)
-
-      // Append rich text content
       formDataToSend.append('lastWords', formData.lastWords)
       formDataToSend.append('story', formData.story)
 
-      // Append each image file
-      formData.images.forEach((image, index) => {
-        formDataToSend.append('images', image.file)
+      // Append each image file - ensure we're using the actual File object
+      formData.images.forEach((image) => {
+        if (image.file instanceof File) {
+          formDataToSend.append('images', image.file)
+        } else {
+          console.error('Invalid file object:', image)
+        }
       })
 
-      // For debugging - log FormData contents
+      // Debug: Log FormData contents
       for (let [key, value] of formDataToSend.entries()) {
-        console.log(key, value)
+        console.log(key, value instanceof File ? value.name : value)
       }
 
-      // Call API with the FormData
       await uploadFarewell(formDataToSend, token)
-
-      // Navigate to gallery on success
       navigate('/gallery')
     } catch (error) {
       console.error('Upload failed:', error)

@@ -4,8 +4,10 @@ const cors = require('cors')
 require('dotenv').config()
 const authRoutes = require('./routes/auth')
 const farewellRoutes = require('./routes/farewell')
+const path = require('path')
 
 const app = express()
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
 
 // Middleware
 app.use(cors())

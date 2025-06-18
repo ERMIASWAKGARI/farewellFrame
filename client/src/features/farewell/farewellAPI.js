@@ -57,7 +57,7 @@ export const uploadFarewell = async (formData, token) => {
   }
 
   const response = await axios.post(
-    `${API_BASE_URL}/farewells/create`,
+    `${API_BASE_URL}/farewells`,
     formData,
     config
   )
