@@ -155,7 +155,11 @@ const EditorToolbar = ({ editor, onEmojiClick, showTextAlign = false }) => {
 const ToolbarButton = ({ onClick, icon, className, title, active }) => (
   <button
     type="button"
-    onClick={onClick}
+    onClick={(e) => {
+      console.log('Clicked element:', e.target)
+      console.log('Button element:', e.currentTarget)
+      onClick(e)
+    }}
     className={className}
     title={title}
     aria-pressed={active}
