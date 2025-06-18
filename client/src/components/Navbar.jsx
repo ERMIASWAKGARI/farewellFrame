@@ -32,6 +32,7 @@ const Navbar = () => {
   const handleLogout = () => {
     dispatch(logout())
     setProfileOpen(false)
+    setMobileOpen(false)
     navigate('/')
   }
 
@@ -108,7 +109,6 @@ const Navbar = () => {
                 onClick={toggleProfile}
                 aria-label="Open profile menu"
               >
-                {/* You could replace this with user.profileImage if available */}
                 <UserCircle2 className="w-6 h-6 text-gray-800 dark:text-white" />
               </button>
 
@@ -189,36 +189,36 @@ const Navbar = () => {
 
           <div className="pt-2 border-t border-border">
             {isLoggedIn ? (
-              <div className="mt-2 space-y-1">
+              <>
                 <Link
                   to="/profile"
-                  className="block px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
+                  className="block px-3 py-2 text-sm text-text-primary dark:text-text-secondary hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
                   onClick={() => setMobileOpen(false)}
                 >
                   My Profile
                 </Link>
                 <button
-                  className="block w-full text-left px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
+                  className="block w-full text-left px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
                   onClick={handleLogout}
                 >
                   Logout
                 </button>
-              </div>
+              </>
             ) : (
-              <div className="mt-2 space-y-1">
-                <Link
-                  to="/auth"
-                  className="block px-4 py-2 text-sm font-medium rounded-md bg-button text-text-primary hover:bg-primary/90 transition-colors duration-200"
-                  onClick={() => setMobileOpen(false)}
-                >
-                  Login
-                </Link>
-              </div>
+              <Link
+                to="/auth"
+                className="block px-3 py-2 text-sm font-medium rounded-md bg-button text-text-primary hover:bg-primary/90 transition-colors duration-200"
+                onClick={() => setMobileOpen(false)}
+              >
+                Login
+              </Link>
             )}
           </div>
 
           <div className="pt-2 border-t border-border">
-            <ThemeToggle />
+            <div onClick={() => setMobileOpen(false)}>
+              <ThemeToggle />
+            </div>
           </div>
         </div>
       )}
