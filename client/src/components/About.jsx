@@ -4,7 +4,10 @@ import { GraduationCap, Quote, ScrollText, Sparkles } from 'lucide-react'
 
 const About = () => {
   return (
-    <section className="relative max-w-6xl mx-auto px-4 py-16 sm:py-24">
+    <section
+      id="about"
+      className="relative max-w-6xl mx-auto px-4 py-16 sm:py-24"
+    >
       {/* Floating background elements */}
       <motion.div
         className="absolute -top-20 -left-20 w-64 h-64 bg-orange-400/10 rounded-full blur-3xl"

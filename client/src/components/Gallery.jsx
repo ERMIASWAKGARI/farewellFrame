@@ -70,7 +70,7 @@ const Gallery = () => {
   }
 
   return (
-    <div className="space-y-8 animate-fade-in p-4 md:p-6">
+    <div id="gallery" className="space-y-8 animate-fade-in p-4 md:p-6">
       <motion.h1
         initial={{ opacity: 0, y: -30 }}
         animate={{ opacity: 1, y: 0 }}

@@ -58,9 +58,7 @@ const HeroSection = () => {
     <section
       className="relative min-h-screen overflow-hidden flex flex-col items-center justify-center text-center 
              px-4 sm:px-6 lg:px-12 
-             pt-20 sm:pt-24 lg:pt-32 
-             pb-8 sm:pb-12 lg:pb-16 
-             mt-12 sm:mt-16 lg:mt-24 
+             pt-16
              bg-background"
     >
       {' '}

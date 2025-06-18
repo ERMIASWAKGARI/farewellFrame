@@ -41,8 +41,9 @@ function App() {
   return (
     <Router>
       <div className="bg-background dark:bg-background min-h-screen text-primary dark:text-primary transition-colors duration-500">
+        {' '}
         <Navbar />
-        <div className="p-4">
+        <div className="pt-16 p-4">
           <Toast />
           <Routes>
             <Route path="/" element={<Home />} />

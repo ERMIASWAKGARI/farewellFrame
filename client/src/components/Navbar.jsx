@@ -1,11 +1,14 @@
 import { Menu, UserCircle2, X } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useLocation } from 'react-router-dom'
+
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { logout } from '../features/auth/authSlice'
 import ThemeToggle from './ThemeToggle'
 
 const Navbar = () => {
+  const location = useLocation()
   const [mobileOpen, setMobileOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [profileOpen, setProfileOpen] = useState(false)
@@ -25,6 +28,20 @@ const Navbar = () => {
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
+
+  // Add this useEffect to handle scrolling after navigation
+  useEffect(() => {
+    if (location.hash) {
+      const id = location.hash.replace('#', '')
+      const element = document.getElementById(id)
+      if (element) {
+        // Small timeout to ensure page is rendered
+        setTimeout(() => {
+          element.scrollIntoView({ behavior: 'smooth' })
+        }, 100)
+      }
+    }
+  }, [location])
 
   const toggleMenu = () => setMobileOpen((prev) => !prev)
   const toggleProfile = () => setProfileOpen((prev) => !prev)
@@ -54,6 +71,21 @@ const Navbar = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [mobileOpen, profileOpen])
 
+  const scrollToSection = (id) => {
+    // If we're not on the home page, navigate there first with hash
+    if (location.pathname !== '/') {
+      navigate(`/#${id}`)
+      return
+    }
+
+    // If we're already on home page, scroll to section
+    const element = document.getElementById(id)
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' })
+    }
+    setMobileOpen(false)
+  }
+
   const baseLink =
     'relative text-sm md:text-base font-medium transition-all duration-300 px-1 pb-1 border-b-2 border-transparent'
   const activeClass = 'text-primary dark:text-primary border-primary'
@@ -61,10 +93,10 @@ const Navbar = () => {
     'hover:border-primary dark:hover:border-primary hover:text-primary dark:hover:text-primary'
 
   const navLinks = [
-    { to: '/', label: 'Home' },
-    { to: '/upload', label: 'Upload Message' },
-    { to: '/gallery', label: 'Gallery' },
-    { to: '/about', label: 'About' },
+    { to: '/', label: 'Home', isRoute: true },
+    { to: '/upload', label: 'Upload Message', isRoute: true },
+    { to: 'gallery', label: 'Gallery', isRoute: false },
+    { to: 'about', label: 'About', isRoute: false },
   ]
 
   return (
@@ -83,24 +115,34 @@ const Navbar = () => {
 
         {/* Desktop Links */}
         <div className="hidden md:flex items-center gap-6">
-          {navLinks.map(({ to, label }) => (
-            <NavLink
-              key={to}
-              to={to}
-              end={to === '/'}
-              className={({ isActive }) =>
-                [
-                  baseLink,
-                  isActive
-                    ? activeClass
-                    : 'text-text-primary dark:text-text-secondary',
-                  hoverClass,
-                ].join(' ')
-              }
-            >
-              {label}
-            </NavLink>
-          ))}
+          {navLinks.map(({ to, label, isRoute }) =>
+            isRoute ? (
+              <NavLink
+                key={to}
+                to={to}
+                end={to === '/'}
+                className={({ isActive }) =>
+                  [
+                    baseLink,
+                    isActive
+                      ? activeClass
+                      : 'text-text-primary dark:text-text-secondary',
+                    hoverClass,
+                  ].join(' ')
+                }
+              >
+                {label}
+              </NavLink>
+            ) : (
+              <button
+                key={to}
+                onClick={() => scrollToSection(to)}
+                className={`${baseLink} text-text-primary dark:text-text-secondary ${hoverClass}`}
+              >
+                {label}
+              </button>
+            )
+          )}
 
           {isLoggedIn ? (
             <div className="relative" ref={profileRef}>
@@ -167,25 +209,35 @@ const Navbar = () => {
           ref={menuRef}
           className="md:hidden fixed right-4 top-16 z-50 bg-background dark:bg-gray-800 shadow-lg rounded-lg py-2 px-4 space-y-2 min-w-[12rem] transition-all duration-300"
         >
-          {navLinks.map(({ to, label }) => (
-            <NavLink
-              key={to}
-              to={to}
-              end={to === '/'}
-              onClick={() => setMobileOpen(false)}
-              className={({ isActive }) =>
-                [
-                  'block px-3 py-2 rounded text-sm font-medium transition-colors',
-                  isActive
-                    ? 'text-primary dark:text-primary bg-gray-100 dark:bg-gray-700'
-                    : 'text-text-primary dark:text-text-secondary',
-                  'hover:bg-gray-200 dark:hover:bg-gray-600',
-                ].join(' ')
-              }
-            >
-              {label}
-            </NavLink>
-          ))}
+          {navLinks.map(({ to, label, isRoute }) =>
+            isRoute ? (
+              <NavLink
+                key={to}
+                to={to}
+                end={to === '/'}
+                onClick={() => setMobileOpen(false)}
+                className={({ isActive }) =>
+                  [
+                    'block px-3 py-2 rounded text-sm font-medium transition-colors',
+                    isActive
+                      ? 'text-primary dark:text-primary bg-gray-100 dark:bg-gray-700'
+                      : 'text-text-primary dark:text-text-secondary',
+                    'hover:bg-gray-200 dark:hover:bg-gray-600',
+                  ].join(' ')
+                }
+              >
+                {label}
+              </NavLink>
+            ) : (
+              <button
+                key={to}
+                onClick={() => scrollToSection(to)}
+                className="block w-full text-left px-3 py-2 rounded text-sm font-medium text-text-primary dark:text-text-secondary hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+              >
+                {label}
+              </button>
+            )
+          )}
 
           <div className="pt-2 border-t border-border">
             {isLoggedIn ? (

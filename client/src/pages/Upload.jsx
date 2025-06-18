@@ -95,7 +95,7 @@ const UploadPage = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
-        className="relative z-10 py-12 px-4 sm:px-6 lg:px-8 min-h-screen"
+        className="relative z-10 px-4 sm:px-6 lg:px-8 min-h-screen"
       >
         <div className="max-w-4xl mx-auto">
           <FormHeader />
