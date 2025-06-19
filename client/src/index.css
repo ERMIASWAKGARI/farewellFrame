@@ -58,3 +58,63 @@ body {
     left: 130%;
   }
 }
+
+@keyframes glow {
+  0% {
+    box-shadow: 0 0 0px var(--color-primary);
+  }
+  50% {
+    box-shadow: 0 0 20px var(--color-primary);
+  }
+  100% {
+    box-shadow: 0 0 0px var(--color-primary);
+  }
+}
+
+.animate-glow {
+  animation: glow 2s ease-in-out infinite;
+}
+
+@keyframes slowGlow {
+  0% {
+    box-shadow: 0 0 0 rgba(249, 115, 22, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 15px rgba(249, 115, 22, 0.6);
+  }
+  100% {
+    box-shadow: 0 0 0 rgba(249, 115, 22, 0.4);
+  }
+}
+
+.animate-slow-glow {
+  animation: slowGlow 3s ease-in-out infinite;
+}
+
+.section-title {
+  @apply text-xl font-semibold mb-4 border-b pb-2;
+  border-image: linear-gradient(to right, var(--color-primary), transparent) 1;
+}
+
+/* Custom scrollbar styling */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+}

@@ -40,7 +40,7 @@ function App() {
 
   return (
     <Router>
-      <div className="bg-background dark:bg-background min-h-screen text-primary dark:text-primary transition-colors duration-500">
+      <div className="bg-background dark:bg-background min-h-screen text-primary dark:text-primary transition-colors duration-500 ">
         {' '}
         <Navbar />
         <div className="pt-16 p-4">

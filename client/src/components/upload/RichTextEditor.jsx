@@ -55,23 +55,24 @@ const RichTextEditor = ({
         </div>
 
         {/* Editor Content */}
-        <div className="p-4">
+        {/* Editor Content (Scrollable) */}
+        <div className="p-4 max-h-[30vh] overflow-y-auto custom-scrollbar rounded-b-xl">
           <EditorContent
             editor={editor}
             className={`w-full min-h-[${minHeight}] focus:outline-none prose dark:prose-invert prose-sm max-w-none
-              ${textColor} ${placeholderColor}
-              prose-headings:text-current
-              prose-strong:text-current prose-strong:font-bold
-              prose-em:text-current prose-em:italic
-              prose-ul:list-disc prose-ol:list-decimal
-              prose-li:marker:text-current
-              prose-blockquote:border-l-2 prose-blockquote:border-current
-              prose-blockquote:pl-4 prose-blockquote:italic
-              prose-code:bg-gray-100 dark:prose-code:bg-gray-700
-              prose-code:px-1 prose-code:rounded
-              prose-pre:bg-gray-800 prose-pre:text-gray-100
-              prose-a:text-primary hover:prose-a:text-primary-dark
-              prose-hr:border-gray-200 dark:prose-hr:border-gray-600`}
+      ${textColor} ${placeholderColor}
+      prose-headings:text-current
+      prose-strong:text-current prose-strong:font-bold
+      prose-em:text-current prose-em:italic
+      prose-ul:list-disc prose-ol:list-decimal
+      prose-li:marker:text-current
+      prose-blockquote:border-l-2 prose-blockquote:border-current
+      prose-blockquote:pl-4 prose-blockquote:italic
+      prose-code:bg-gray-100 dark:prose-code:bg-gray-700
+      prose-code:px-1 prose-code:rounded
+      prose-pre:bg-gray-800 prose-pre:text-gray-100
+      prose-a:text-primary hover:prose-a:text-primary-dark
+      prose-hr:border-gray-200 dark:prose-hr:border-gray-600`}
           />
         </div>
       </div>
