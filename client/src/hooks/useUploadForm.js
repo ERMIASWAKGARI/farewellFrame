@@ -78,7 +78,12 @@ export const useUploadForm = () => {
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files)
     if (formData.images.length + files.length > 2) {
-      dispatch(showToast({ message: 'Only 2 images allowed', type: 'warning' }))
+      dispatch(
+        showToast({
+          message: 'Exactly 2 images required', // Updated message
+          type: 'warning',
+        })
+      )
       return
     }
 
@@ -116,16 +121,20 @@ export const useUploadForm = () => {
     })
   }
 
+  // In useUploadForm.js
   const validateForm = () => {
     if (
       !formData.name ||
       !formData.lastWords ||
       !formData.story ||
-      formData.images.length === 0
+      formData.images.length !== 2 // Changed from === 0 to !== 2
     ) {
       dispatch(
         showToast({
-          message: 'Please fill all required fields',
+          message:
+            formData.images.length < 2
+              ? 'Please upload exactly 2 images'
+              : 'Please fill all required fields',
           type: 'error',
         })
       )

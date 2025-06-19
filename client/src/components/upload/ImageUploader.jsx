@@ -1,5 +1,7 @@
 import { ImagePlus, UploadCloud } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { showToast } from '../../features/toast/toastSlice'
 
 const ImageUploader = ({
   images,
@@ -7,6 +9,8 @@ const ImageUploader = ({
   removeImage,
   setDefaultImage,
 }) => {
+  const dispatch = useDispatch()
+
   const [isDragging, setIsDragging] = useState(false)
   const [previewSize, setPreviewSize] = useState('h-24 w-24')
 
@@ -33,10 +37,19 @@ const ImageUploader = ({
       e.stopPropagation()
       setIsDragging(false)
       if (e.dataTransfer.files?.length) {
+        if (images.length + e.dataTransfer.files.length > 2) {
+          dispatch(
+            showToast({
+              message: 'Exactly 2 images required',
+              type: 'warning',
+            })
+          )
+          return
+        }
         handleImageUpload({ target: { files: e.dataTransfer.files } })
       }
     },
-    [handleImageUpload]
+    [handleImageUpload, images.length] // Added dependency
   )
 
   useEffect(() => {
@@ -52,7 +65,7 @@ const ImageUploader = ({
   return (
     <div className="sm:col-span-2 space-y-3">
       <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
-        Images (Max 2, 1 default) *
+        Images (Exactly 2 required) * {/* Updated text */}
       </label>
 
       {/* Drag-drop area */}
@@ -132,8 +145,10 @@ const ImageUploader = ({
               </div>
               <p className="text-xs text-text-secondary">
                 PNG, JPG up to 5MB each —{' '}
-                <span className="font-semibold">{2 - images.length}</span>{' '}
-                slot(s) remaining
+                <span className="font-semibold">
+                  {Math.max(0, 2 - images.length)}
+                </span>{' '}
+                more required {/* Updated message */}
               </p>
             </>
           )}
