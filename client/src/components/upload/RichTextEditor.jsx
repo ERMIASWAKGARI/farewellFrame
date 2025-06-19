@@ -59,7 +59,7 @@ const RichTextEditor = ({
         <div className="p-4 max-h-[30vh] overflow-y-auto custom-scrollbar rounded-b-xl">
           <EditorContent
             editor={editor}
-            className={`w-full min-h-[${minHeight}] rounded-md bg-gray-300 dark:bg-gray-600 focus:outline-none prose dark:prose-invert prose-sm max-w-none
+            className={`w-full min-h-[${minHeight}] rounded-md bg-gray-200 dark:bg-gray-600 focus:outline-none prose dark:prose-invert prose-sm max-w-none
       ${textColor} ${placeholderColor}
       prose-headings:text-current
       prose-strong:text-current prose-strong:font-bold

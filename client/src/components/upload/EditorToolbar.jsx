@@ -3,9 +3,11 @@ import { Bold, Italic, Strikethrough, Underline } from 'lucide-react'
 const EditorToolbar = ({ editor = false }) => {
   if (!editor) return null
 
-  const buttonClasses = `p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors`
+  const buttonClasses = `p-2 rounded-md text-gray-500 dark:text-gray-400 transition-colors`
   const activeClasses =
-    'bg-primary-100 text-primary-700 dark:bg-primary-900/30 dark:text-primary-400'
+    'bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-white'
+  const hoverClasses =
+    'hover:bg-gray-100 hover:text-gray-700 dark:hover:bg-gray-700 dark:hover:text-gray-200'
 
   return (
     <div className="flex flex-wrap items-center gap-1">
@@ -13,7 +15,7 @@ const EditorToolbar = ({ editor = false }) => {
         type="button"
         onClick={() => editor.chain().focus().toggleBold().run()}
         className={`${buttonClasses} ${
-          editor.isActive('bold') ? activeClasses : ''
+          editor.isActive('bold') ? activeClasses : hoverClasses
         }`}
         title="Bold"
       >
@@ -24,7 +26,7 @@ const EditorToolbar = ({ editor = false }) => {
         type="button"
         onClick={() => editor.chain().focus().toggleItalic().run()}
         className={`${buttonClasses} ${
-          editor.isActive('italic') ? activeClasses : ''
+          editor.isActive('italic') ? activeClasses : hoverClasses
         }`}
         title="Italic"
       >
@@ -35,7 +37,7 @@ const EditorToolbar = ({ editor = false }) => {
         type="button"
         onClick={() => editor.chain().focus().toggleUnderline().run()}
         className={`${buttonClasses} ${
-          editor.isActive('underline') ? activeClasses : ''
+          editor.isActive('underline') ? activeClasses : hoverClasses
         }`}
         title="Underline"
       >
@@ -46,7 +48,7 @@ const EditorToolbar = ({ editor = false }) => {
         type="button"
         onClick={() => editor.chain().focus().toggleStrike().run()}
         className={`${buttonClasses} ${
-          editor.isActive('strike') ? activeClasses : ''
+          editor.isActive('strike') ? activeClasses : hoverClasses
         }`}
         title="Strikethrough"
       >
