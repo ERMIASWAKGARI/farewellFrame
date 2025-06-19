@@ -1,8 +1,10 @@
 const jwt = require('jsonwebtoken')
 const User = require('../models/User')
+const { UnauthorizedError, NotFoundError } = require('../utils/errors')
+const catchAsync = require('../utils/catchAsync')
 
 // Protect routes - verify JWT token
-const protect = async (req, res, next) => {
+const protect = catchAsync(async (req, res, next) => {
   let token
 
   // Check for token in headers
@@ -14,36 +16,22 @@ const protect = async (req, res, next) => {
   }
 
   if (!token) {
-    return res.status(401).json({
-      success: false,
-      message: 'Not authorized to access this route',
-    })
+    throw new UnauthorizedError('Not authorized to access this route')
   }
 
-  try {
-    // Verify token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET)
+  // Verify token
+  const decoded = jwt.verify(token, process.env.JWT_SECRET)
 
-    // Get user from DB (excluding password)
-    const user = await User.findById(decoded.id).select('-password')
+  // Get user from DB (excluding password)
+  const user = await User.findById(decoded.id).select('-password')
 
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: 'User not found',
-      })
-    }
-
-    // Attach user to request object
-    req.user = user
-    next()
-  } catch (error) {
-    console.error('Error verifying token:', error)
-    return res.status(401).json({
-      success: false,
-      message: 'Not authorized, token failed',
-    })
+  if (!user) {
+    throw new NotFoundError('User not found')
   }
-}
+
+  // Attach user to request object
+  req.user = user
+  next()
+})
 
 module.exports = { protect }
