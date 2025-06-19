@@ -1,12 +1,16 @@
 const Farewell = require('../models/Farewell')
 const path = require('path')
-const fs = require('fs')
+const fs = require('fs/promises')
+const { Types } = require('mongoose')
 
 const createFarewell = async (req, res) => {
   try {
     const { name, department, year, lastWords, story } = req.body
-    console.log(req.body)
-    const userId = req.user.id
+    const userId = req.user?.id
+
+    if (!userId) {
+      throw new Error('Unauthorized. User ID is missing.')
+    }
 
     if (!req.files || req.files.length === 0) {
       return res.status(400).json({
@@ -15,9 +19,8 @@ const createFarewell = async (req, res) => {
       })
     }
 
-    // Process uploaded files
     const images = req.files.map((file) => ({
-      path: file.path.replace(/\\/g, '/'), // Convert to forward slashes
+      path: file.path.replace(/\\/g, '/'),
       originalname: file.originalname,
       mimetype: file.mimetype,
       size: file.size,
@@ -35,25 +38,27 @@ const createFarewell = async (req, res) => {
 
     await farewell.save()
 
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
       data: farewell,
     })
   } catch (error) {
     console.error('Error creating farewell:', error)
 
-    // Cleanup uploaded files if error occurs
+    // Clean up uploaded files if an error occurs
     if (req.files) {
-      req.files.forEach((file) => {
-        fs.unlink(file.path, (err) => {
-          if (err) console.error('Error deleting file:', err)
-        })
-      })
+      for (const file of req.files) {
+        try {
+          await fs.unlink(file.path)
+        } catch (err) {
+          console.error(`Failed to delete file ${file.path}:`, err)
+        }
+      }
     }
 
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
-      message: error.message || 'Server error',
+      message: error.message || 'Something went wrong while creating farewell.',
     })
   }
 }
@@ -64,23 +69,32 @@ const getAllFarewells = async (req, res) => {
       .populate('user', 'name email')
       .sort({ createdAt: -1 })
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       count: farewells.length,
       data: farewells,
     })
   } catch (error) {
     console.error('Error fetching farewells:', error)
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
-      message: 'Server error',
+      message: 'Unable to fetch farewells. Try again later.',
     })
   }
 }
 
 const deleteFarewell = async (req, res) => {
   try {
-    const farewell = await Farewell.findById(req.params.id)
+    const { id } = req.params
+
+    if (!Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid farewell ID',
+      })
+    }
+
+    const farewell = await Farewell.findById(id)
 
     if (!farewell) {
       return res.status(404).json({
@@ -90,23 +104,26 @@ const deleteFarewell = async (req, res) => {
     }
 
     // Delete associated images
-    farewell.images.forEach((image) => {
-      fs.unlink(image.path, (err) => {
-        if (err) console.error('Error deleting file:', err)
-      })
-    })
+    for (const image of farewell.images) {
+      try {
+        await fs.unlink(image.path)
+      } catch (err) {
+        console.error(`Error deleting file ${image.path}:`, err)
+        // continue even if one image fails to delete
+      }
+    }
 
-    await farewell.remove()
+    await farewell.deleteOne()
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: 'Farewell deleted successfully',
     })
   } catch (error) {
     console.error('Error deleting farewell:', error)
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
-      message: 'Server error',
+      message: error.message || 'Error occurred while deleting farewell',
     })
   }
 }

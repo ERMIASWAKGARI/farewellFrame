@@ -12,7 +12,12 @@ import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { uploadFarewell } from '../features/farewell/farewellAPI'
 
+import { useDispatch } from 'react-redux'
+import { showToast } from '../features/toast/toastSlice'
+
 export const useUploadForm = () => {
+  const dispatch = useDispatch()
+
   const navigate = useNavigate()
   const { token } = useSelector((state) => state.auth) // Get token from Redux store
   const [formData, setFormData] = useState({
@@ -127,12 +132,12 @@ export const useUploadForm = () => {
       }
 
       await uploadFarewell(formDataToSend, token)
+      dispatch(showToast({ message: 'Upload successful!', type: 'success' }))
       navigate('/gallery')
     } catch (error) {
-      console.error('Upload failed:', error)
-      setError(
+      const msg =
         error.response?.data?.message || 'Failed to upload. Please try again.'
-      )
+      dispatch(showToast({ message: msg, type: 'error' }))
     } finally {
       setUploading(false)
     }
