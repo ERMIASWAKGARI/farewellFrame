@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import Color from '@tiptap/extension-color'
 import Link from '@tiptap/extension-link'
 import Placeholder from '@tiptap/extension-placeholder'
@@ -8,18 +7,16 @@ import Underline from '@tiptap/extension-underline'
 import { useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import { useRef, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { uploadFarewell } from '../features/farewell/farewellAPI'
-
-import { useDispatch } from 'react-redux'
 import { showToast } from '../features/toast/toastSlice'
 
 export const useUploadForm = () => {
   const dispatch = useDispatch()
-
   const navigate = useNavigate()
-  const { token } = useSelector((state) => state.auth) // Get token from Redux store
+  const { token } = useSelector((state) => state.auth)
+
   const [formData, setFormData] = useState({
     name: '',
     department: 'Software Engineering',
@@ -28,13 +25,14 @@ export const useUploadForm = () => {
     story: '',
     images: [],
   })
+
   const [uploading, setUploading] = useState(false)
+  const [showPreview, setShowPreview] = useState(false)
   const [showEmojiPicker, setShowEmojiPicker] = useState(false)
   const [emojiPickerPosition, setEmojiPickerPosition] = useState({
     top: 0,
     left: 0,
   })
-  const [error, setError] = useState(null)
   const emojiPickerRef = useRef(null)
 
   // Editor configurations
@@ -83,11 +81,13 @@ export const useUploadForm = () => {
       dispatch(showToast({ message: 'Only 2 images allowed', type: 'warning' }))
       return
     }
+
     const previews = files.map((file) => ({
       file,
       preview: URL.createObjectURL(file),
-      isDefault: false,
+      isDefault: formData.images.length === 0 && files.indexOf(file) === 0,
     }))
+
     setFormData((prev) => ({
       ...prev,
       images: [...prev.images, ...previews],
@@ -109,7 +109,6 @@ export const useUploadForm = () => {
       const images = [...prev.images]
       URL.revokeObjectURL(images[index]?.preview)
       images.splice(index, 1)
-      // Ensure one default remains
       if (images.length && !images.some((img) => img.isDefault)) {
         images[0].isDefault = true
       }
@@ -117,34 +116,66 @@ export const useUploadForm = () => {
     })
   }
 
-  // On submit
-  const handleSubmit = async (e) => {
+  const validateForm = () => {
+    if (
+      !formData.name ||
+      !formData.lastWords ||
+      !formData.story ||
+      formData.images.length === 0
+    ) {
+      dispatch(
+        showToast({
+          message: 'Please fill all required fields',
+          type: 'error',
+        })
+      )
+      return false
+    }
+    return true
+  }
+
+  const handlePreview = (e) => {
     e.preventDefault()
+    if (!validateForm()) return
+    setShowPreview(true)
+  }
+
+  const submitForm = async (e) => {
+    if (e) e.preventDefault()
+
+    if (!validateForm()) return
+
     setUploading(true)
     try {
-      const fd = new FormData()
-      fd.append('name', formData.name)
-      fd.append('department', formData.department)
-      fd.append('year', formData.year)
-      fd.append('lastWords', formData.lastWords)
-      fd.append('story', formData.story)
+      const formDataToSend = new FormData()
+      formDataToSend.append('name', formData.name)
+      formDataToSend.append('department', formData.department)
+      formDataToSend.append('year', formData.year)
+      formDataToSend.append('lastWords', formData.lastWords)
+      formDataToSend.append('story', formData.story)
+
+      // Find the index of the default image
+      const defaultIndex = formData.images.findIndex((img) => img.isDefault)
+      formDataToSend.append('defaultIndex', defaultIndex.toString())
 
       formData.images.forEach((img) => {
-        if (img.file) fd.append('images', img.file)
+        formDataToSend.append('images', img.file)
       })
 
-      const defaultIndex = formData.images.findIndex((img) => img.isDefault)
-      fd.append('defaultIndex', defaultIndex > -1 ? defaultIndex : 0)
-
-      await uploadFarewell(fd, token)
+      await uploadFarewell(formDataToSend, token)
       dispatch(showToast({ message: 'Upload successful!', type: 'success' }))
       navigate('/gallery')
-    } catch (err) {
-      console.log('Error: ', err)
-      const msg = err.response?.data?.message || 'Upload failed.'
-      dispatch(showToast({ message: msg, type: 'error' }))
+    } catch (error) {
+      console.error('Upload error:', error)
+      dispatch(
+        showToast({
+          message: error.response?.data?.message || 'Upload failed',
+          type: 'error',
+        })
+      )
     } finally {
       setUploading(false)
+      setShowPreview(false)
     }
   }
 
@@ -173,15 +204,18 @@ export const useUploadForm = () => {
   return {
     formData,
     uploading,
+    showPreview,
+    setShowPreview,
     showEmojiPicker,
     emojiPickerPosition,
     lastWordsEditor,
     storyEditor,
     handleChange,
-    handleSubmit,
+    handlePreview,
     handleImageUpload,
     setDefaultImage,
     removeImage,
+    submitForm,
     handleEmojiClick,
     openEmojiPicker,
     emojiPickerRef,

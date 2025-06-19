@@ -17,6 +17,7 @@ const createFarewell = async (req, res) => {
   try {
     const { name, department, year, lastWords, story } = req.body
     const userId = req.user?.id
+    console.log('req.body', req.body)
 
     if (!userId) {
       throw new Error('Unauthorized. User ID is missing.')
