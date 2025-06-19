@@ -27,6 +27,13 @@ const UploadPage = () => {
 
   const navigate = useNavigate()
 
+  const InfoItem = ({ label, value }) => (
+    <div>
+      <p className="text-sm text-text-secondary">{label}</p>
+      <p className="text-lg font-medium text-text-primary">{value}</p>
+    </div>
+  )
+
   return (
     <div className="relative min-h-screen bg-background overflow-hidden">
       {/* Orbiting Glow Blobs */}
@@ -154,83 +161,81 @@ const UploadPage = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-200 flex items-center justify-center p-4"
+            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[200] flex items-center justify-center p-4"
           >
             <motion.div
-              initial={{ scale: 0.9, y: 50 }}
-              animate={{ scale: 1, y: 0 }}
-              className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+              initial={{ scale: 0.95, y: 40, opacity: 0 }}
+              animate={{ scale: 1, y: 0, opacity: 1 }}
+              exit={{ scale: 0.95, y: 40, opacity: 0 }}
+              transition={{ type: 'spring', stiffness: 200, damping: 20 }}
+              className="relative bg-background dark:bg-gray-900 rounded-3xl shadow-2xl w-full max-w-screen-xl max-h-[90vh] overflow-y-auto"
             >
+              {/* Close Button */}
               <button
                 onClick={() => setShowPreview(false)}
-                className="absolute top-4 right-4 z-10 bg-black/10 hover:bg-black/20 text-white rounded-full p-2 transition-colors"
+                className="absolute top-4 right-4 z-10 bg-black/10 hover:bg-black/20 text-white rounded-full p-2 backdrop-blur transition"
               >
                 <X className="w-6 h-6" />
               </button>
 
-              <div className="p-8">
-                <h2 className="text-3xl font-bold text-center mb-8 text-primary">
-                  Review Your Submission
+              <div className="p-6 sm:p-10">
+                <h2 className="text-3xl sm:text-4xl font-extrabold text-center mb-10 text-primary tracking-tight">
+                  🎓 Review Your Submission
                 </h2>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  {/* Left Column - Basic Info */}
+                  {/* Left Column */}
                   <div className="space-y-6">
-                    <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-border">
+                    {/* Basic Info */}
+                    <div className="bg-white dark:bg-gray-800 p-6 rounded-xl border border-border shadow-sm">
                       <h3 className="text-xl font-semibold mb-4 text-primary border-b pb-2">
                         Basic Information
                       </h3>
                       <div className="space-y-4">
-                        <div>
-                          <p className="text-sm text-text-secondary">
-                            Full Name
-                          </p>
-                          <p className="text-lg font-medium">{formData.name}</p>
-                        </div>
-                        <div>
-                          <p className="text-sm text-text-secondary">
-                            Department
-                          </p>
-                          <p className="text-lg font-medium">
-                            {formData.department}
-                          </p>
-                        </div>
-                        <div>
-                          <p className="text-sm text-text-secondary">
-                            Graduation Year
-                          </p>
-                          <p className="text-lg font-medium">{formData.year}</p>
-                        </div>
+                        <InfoItem label="Full Name" value={formData.name} />
+                        <InfoItem
+                          label="Department"
+                          value={formData.department}
+                        />
+                        <InfoItem
+                          label="Graduation Year"
+                          value={formData.year}
+                        />
                       </div>
                     </div>
 
-                    <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-border">
+                    {/* Last Words */}
+                    <div className="bg-white dark:bg-gray-800 p-6 rounded-xl border border-border shadow-sm">
                       <h3 className="text-xl font-semibold mb-4 text-primary border-b pb-2">
                         Last Words
                       </h3>
-                      <div
-                        className="prose dark:prose-invert max-w-none"
-                        dangerouslySetInnerHTML={{ __html: formData.lastWords }}
-                      />
+                      <div className="prose dark:prose-invert max-w-none">
+                        <div
+                          dangerouslySetInnerHTML={{
+                            __html: formData.lastWords,
+                          }}
+                        />
+                      </div>
                     </div>
                   </div>
 
-                  {/* Right Column - Images and Story */}
+                  {/* Right Column */}
                   <div className="space-y-6">
-                    <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-border">
+                    {/* Images */}
+                    <div className="bg-white dark:bg-gray-800 p-6 rounded-xl border border-border shadow-sm">
                       <h3 className="text-xl font-semibold mb-4 text-primary border-b pb-2">
                         Images ({formData.images.length})
                       </h3>
-                      <div className="grid grid-cols-2 gap-4">
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                         {formData.images.map((img, idx) => (
                           <div key={idx} className="relative group">
                             <img
                               src={img.preview}
-                              className="w-full h-32 object-cover rounded-lg border border-border"
+                              className="w-full h-32 object-cover rounded-xl border border-border shadow-sm"
                               alt={`Preview ${idx + 1}`}
                             />
                             {img.isDefault && (
-                              <span className="absolute bottom-2 left-2 bg-primary text-white text-xs px-2 py-1 rounded-full">
+                              <span className="absolute bottom-2 left-2 bg-primary text-white text-xs px-2 py-1 rounded-full shadow">
                                 Default
                               </span>
                             )}
@@ -239,34 +244,35 @@ const UploadPage = () => {
                       </div>
                     </div>
 
-                    <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-border">
+                    {/* Story */}
+                    <div className="bg-white dark:bg-gray-800 p-6 rounded-xl border border-border shadow-sm">
                       <h3 className="text-xl font-semibold mb-4 text-primary border-b pb-2">
                         Your Story
                       </h3>
-                      <div
-                        className="prose dark:prose-invert max-w-none"
-                        dangerouslySetInnerHTML={{ __html: formData.story }}
-                      />
+                      <div className="prose dark:prose-invert max-w-none">
+                        <div
+                          dangerouslySetInnerHTML={{ __html: formData.story }}
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
 
-                {/* Action Buttons */}
-                <div className="flex justify-end gap-4 p-6 border-t">
+                {/* Actions */}
+                <div className="flex flex-col sm:flex-row justify-end items-center gap-4 mt-10 border-t border-border pt-6">
                   <button
-                    type="button"
                     onClick={() => setShowPreview(false)}
-                    className="px-4 py-2 border rounded-lg"
+                    className="px-5 py-2 border border-border rounded-lg text-sm text-text-primary hover:bg-gray-100 dark:hover:bg-gray-700 transition"
                   >
                     Back to Edit
                   </button>
                   <button
-                    type="button"
                     onClick={submitForm}
                     disabled={uploading}
-                    className="px-4 py-2 bg-primary text-white rounded-lg disabled:opacity-50"
+                    className="relative px-6 py-2 text-sm font-medium text-white rounded-lg bg-primary shadow-md hover:brightness-110 transition-all overflow-hidden disabled:opacity-50"
                   >
-                    {uploading ? 'Uploading...' : 'Confirm & Submit'}
+                    {uploading ? 'Uploading...' : '✨ Confirm & Submit'}
+                    <span className="absolute inset-0 animate-glow pointer-events-none"></span>
                   </button>
                 </div>
               </div>
