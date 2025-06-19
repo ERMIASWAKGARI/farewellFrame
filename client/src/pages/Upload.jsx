@@ -20,6 +20,7 @@ const UploadPage = () => {
     handleChange,
     handleSubmit,
     handleImageUpload,
+    setDefaultImage,
     removeImage,
     handleEmojiClick,
     openEmojiPicker,
@@ -115,6 +116,7 @@ const UploadPage = () => {
               <ImageUploader
                 images={formData.images}
                 handleImageUpload={handleImageUpload}
+                setDefaultImage={setDefaultImage}
                 removeImage={removeImage}
               />
 

@@ -77,21 +77,25 @@ export const useUploadForm = () => {
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
+  // in useUploadForm hook
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files)
-    if (files.length + formData.images.length > 5) {
-      alert('Maximum 5 images allowed')
+    if (formData.images.length + files.length > 2) {
+      dispatch(showToast({ message: 'Only 2 images allowed', type: 'warning' }))
       return
     }
-
-    const imagePreviews = files.map((file) => ({
+    const previews = files.map((file) => ({
       file,
       preview: URL.createObjectURL(file),
+      isDefault: false,
     }))
+    setFormData((prev) => ({ images: [...prev.images, ...previews] }))
+  }
 
+  const setDefaultImage = (index) => {
     setFormData((prev) => ({
       ...prev,
-      images: [...prev.images, ...imagePreviews],
+      images: prev.images.map((img, i) => ({ ...img, isDefault: i === index })),
     }))
   }
 
@@ -175,6 +179,7 @@ export const useUploadForm = () => {
     handleChange,
     handleSubmit,
     handleImageUpload,
+    setDefaultImage,
     removeImage,
     handleEmojiClick,
     openEmojiPicker,
