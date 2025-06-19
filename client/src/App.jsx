@@ -1,12 +1,12 @@
 import { useEffect } from 'react'
-
 import { useSelector } from 'react-redux'
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
 import Navbar from './components/Navbar'
+import ProtectedRoute from './components/ProtectedRoute'
 import Toast from './components/Toast'
 import AuthPage from './pages/Authentication'
 import ForgotPassword from './pages/ForgotPassword'
-import Home from './pages/Home' // Add this line at the top
+import Home from './pages/Home'
 import NotFound from './pages/NotFound'
 import ResetPassword from './pages/ResetPass'
 import Upload from './pages/Upload'
@@ -40,8 +40,7 @@ function App() {
 
   return (
     <Router>
-      <div className="bg-background dark:bg-background min-h-screen text-primary dark:text-primary transition-colors duration-500 ">
-        {' '}
+      <div className="bg-background dark:bg-background min-h-screen text-primary dark:text-primary transition-colors duration-500">
         <Navbar />
         <div className="pt-16 p-4">
           <Toast />
@@ -51,7 +50,13 @@ function App() {
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/verify-email/:token" element={<VerifyEmail />} />
             <Route path="/reset-password/:token" element={<ResetPassword />} />
-            <Route path="/upload" element={<Upload />} />
+
+            {/* Protected Routes */}
+            <Route element={<ProtectedRoute />}>
+              <Route path="/upload" element={<Upload />} />
+              {/* Add more protected routes here */}
+            </Route>
+
             <Route path="*" element={<NotFound />} />
           </Routes>
         </div>
