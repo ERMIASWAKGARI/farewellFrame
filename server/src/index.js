@@ -1,10 +1,11 @@
 const express = require('express')
-const mongoose = require('mongoose')
 const cors = require('cors')
-require('dotenv').config()
+
 const authRoutes = require('./routes/auth')
 const farewellRoutes = require('./routes/farewell')
 const path = require('path')
+
+const connectDB = require('./config/db')
 
 const app = express()
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
@@ -13,48 +14,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
 app.use(cors())
 app.use(express.json())
 
-// Database connection
-// Database connection with retries
-const connectWithRetry = async () => {
-  const maxRetries = 5
-  let retries = 0
-
-  while (retries < maxRetries) {
-    try {
-      await mongoose.connect(process.env.MONGO_URI, {
-        serverSelectionTimeoutMS: 5000,
-        socketTimeoutMS: 45000,
-      })
-      console.log('Connected to MongoDB')
-      return
-    } catch (err) {
-      retries++
-      console.error(
-        `MongoDB connection failed (attempt ${retries}):`,
-        err.message
-      )
-
-      if (retries < maxRetries) {
-        await new Promise((resolve) => setTimeout(resolve, 5000))
-      } else {
-        console.error('Max retries reached. Could not connect to MongoDB.')
-        process.exit(1)
-      }
-    }
-  }
-}
-
-connectWithRetry()
-
-// Handle connection events
-mongoose.connection.on('disconnected', () => {
-  console.log('MongoDB disconnected. Attempting to reconnect...')
-  connectWithRetry()
-})
-
-mongoose.connection.on('error', (err) => {
-  console.error('MongoDB connection error:', err)
-})
+connectDB()
 
 // Routes
 app.use('/api/v1/auth', authRoutes)

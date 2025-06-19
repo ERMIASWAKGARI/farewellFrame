@@ -6,10 +6,13 @@ import TextStyle from '@tiptap/extension-text-style'
 import Underline from '@tiptap/extension-underline'
 import { useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { uploadFarewell } from '../features/farewell/farewellAPI'
+import {
+  getUserFarewell,
+  uploadFarewell,
+} from '../features/farewell/farewellAPI'
 import { showToast } from '../features/toast/toastSlice'
 
 export const useUploadForm = () => {
@@ -33,7 +36,36 @@ export const useUploadForm = () => {
     top: 0,
     left: 0,
   })
+  const [existingFarewell, setExistingFarewell] = useState(null)
+  const [loadingFarewell, setLoadingFarewell] = useState(true)
+  const [checkError, setCheckError] = useState(null)
   const emojiPickerRef = useRef(null)
+
+  // Check for existing farewell on mount
+  useEffect(() => {
+    const checkExistingFarewell = async () => {
+      try {
+        setLoadingFarewell(true)
+        setCheckError(null)
+        const response = await getUserFarewell(token)
+        if (response.data) {
+          setExistingFarewell(response.data)
+        }
+      } catch (error) {
+        console.error('Error checking for existing farewell:', error)
+        setCheckError(
+          error.response?.data?.message ||
+            'Failed to check for existing farewell'
+        )
+      } finally {
+        setLoadingFarewell(false)
+      }
+    }
+
+    if (token) {
+      checkExistingFarewell()
+    }
+  }, [token])
 
   // Editor configurations
   const lastWordsEditor = useEditor({
@@ -228,5 +260,8 @@ export const useUploadForm = () => {
     handleEmojiClick,
     openEmojiPicker,
     emojiPickerRef,
+    existingFarewell,
+    loadingFarewell,
+    checkError,
   }
 }

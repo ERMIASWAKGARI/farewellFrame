@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const API_BASE_URL =
+export const API_BASE_URL =
   import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1'
 
 export const registerUser = async (userData) => {
@@ -61,5 +61,16 @@ export const uploadFarewell = async (formData, token) => {
     formData,
     config
   )
+  return response.data
+}
+
+export const getUserFarewell = async (token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+
+  const response = await axios.get(`${API_BASE_URL}/farewells/user`, config)
   return response.data
 }

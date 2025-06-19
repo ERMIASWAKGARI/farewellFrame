@@ -11,7 +11,7 @@ const {
 
 const formatUploadedImages = (files, defaultIndex) => {
   return files.map((file, idx) => ({
-    path: file.path.replace(/\\/g, '/'),
+    path: file.filename, // This now contains just the filename
     originalname: file.originalname,
     mimetype: file.mimetype,
     size: file.size,
@@ -115,8 +115,31 @@ const deleteFarewell = catchAsync(async (req, res, next) => {
   })
 })
 
+const getUserFarewell = catchAsync(async (req, res, next) => {
+  const userId = req.user.id
+
+  const farewell = await Farewell.findOne({ user: userId }).populate(
+    'user',
+    'name email'
+  )
+
+  if (!farewell) {
+    return res.status(200).json({
+      success: true,
+      data: null,
+    })
+  }
+
+  res.status(200).json({
+    success: true,
+    data: farewell,
+  })
+})
+
+// Add to exports
 module.exports = {
   createFarewell,
   getAllFarewells,
   deleteFarewell,
+  getUserFarewell, // Add this
 }
