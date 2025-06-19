@@ -17,7 +17,6 @@ function App() {
   const mode = useSelector((state) => state.theme.mode)
 
   useEffect(() => {
-    // Apply theme class immediately
     const root = document.documentElement
     if (mode === 'dark') {
       root.classList.add('dark')
@@ -26,23 +25,10 @@ function App() {
     }
   }, [mode])
 
-  // Add initial theme application
-  useEffect(() => {
-    const storedTheme = localStorage.getItem('theme')
-    if (storedTheme) {
-      const root = document.documentElement
-      if (storedTheme === 'dark') {
-        root.classList.add('dark')
-      } else {
-        root.classList.remove('dark')
-      }
-    }
-  }, [])
-
   return (
     <Router>
       <ScrollToTop />
-      <div className="bg-background dark:bg-background min-h-screen text-primary dark:text-primary transition-colors duration-500">
+      <div className="bg-background min-h-screen text-primary dark:text-primary transition-colors duration-500">
         <Navbar />
         <div className="pt-16 p-4">
           <Toast />
