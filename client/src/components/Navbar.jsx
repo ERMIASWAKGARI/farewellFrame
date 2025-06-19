@@ -37,7 +37,26 @@ const Navbar = () => {
       if (element) {
         // Small timeout to ensure page is rendered
         setTimeout(() => {
-          element.scrollIntoView({ behavior: 'smooth' })
+          const navbarHeight = document.querySelector('nav')?.offsetHeight || 70
+          const elementPosition =
+            element.getBoundingClientRect().top + window.pageYOffset
+          const offsetPosition = elementPosition - navbarHeight
+
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth',
+          })
+        }, 100)
+      }
+    }
+
+    // Handle navigation from other routes using state
+    if (location.state?.scrollTo) {
+      const id = location.state.scrollTo
+      const element = document.getElementById(id)
+      if (element) {
+        setTimeout(() => {
+          scrollToSectionWithOffset(id)
         }, 100)
       }
     }
@@ -75,11 +94,15 @@ const Navbar = () => {
   const scrollToSection = (id) => {
     // If we're not on the home page, navigate there first with hash
     if (location.pathname !== '/') {
-      navigate(`/#${id}`)
+      navigate(`/#${id}`, { state: { scrollTo: id } }) // Add state to track section
       return
     }
 
-    // If we're already on home page, scroll to section
+    // If we're already on home page, scroll to section with navbar offset
+    scrollToSectionWithOffset(id)
+  }
+
+  const scrollToSectionWithOffset = (id) => {
     const element = document.getElementById(id)
     if (element) {
       const navbarHeight = document.querySelector('nav')?.offsetHeight || 70
@@ -231,12 +254,13 @@ const Navbar = () => {
           {navLinks.map(({ to, label, isRoute }) =>
             isRoute ? (
               // In your mobile navLinks mapping
+              // In your mobile menu NavLink mapping
               <NavLink
                 key={to}
                 to={to}
                 end={to === '/'}
                 onClick={(e) => {
-                  setMobileOpen(false)
+                  setMobileOpen(false) // Always close menu on click
                   if (location.pathname === '/' && to === '/') {
                     e.preventDefault()
                     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -255,9 +279,13 @@ const Navbar = () => {
                 {label}
               </NavLink>
             ) : (
+              // In your mobile menu button mapping
               <button
                 key={to}
-                onClick={() => scrollToSection(to)}
+                onClick={() => {
+                  setMobileOpen(false) // Close menu first
+                  scrollToSection(to) // Then handle scroll
+                }}
                 className="block w-full text-left px-3 py-2 rounded text-sm font-medium text-text-primary dark:text-text-secondary hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
               >
                 {label}

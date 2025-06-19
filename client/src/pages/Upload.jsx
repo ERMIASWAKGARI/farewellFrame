@@ -36,63 +36,16 @@ const UploadPage = () => {
 
   return (
     <div className="relative min-h-screen bg-background overflow-hidden">
-      {/* Orbiting Glow Blobs */}
-      <motion.div
-        className="fixed w-[40rem] h-[40rem] bg-primary/20 rounded-full blur-[120px] z-0"
-        initial={{ x: '-50%', y: '-50%' }}
-        animate={{
-          x: ['-50%', '-30%', '-50%', '-70%', '-50%'],
-          y: ['-50%', '-70%', '-50%', '-30%', '-50%'],
-          rotate: [0, 180, 360],
-        }}
-        transition={{
-          duration: 60,
-          repeat: Infinity,
-          ease: 'linear',
-        }}
+      {/* Single optimized blob background */}
+      <div
+        className="fixed w-[25rem] h-[25rem] bg-primary/10 rounded-full blur-[40px] z-0 pointer-events-none animate-float"
         style={{
           left: '50%',
           top: '50%',
+          transform: 'translate(-50%, -50%)',
         }}
       />
-      <motion.div
-        className="fixed w-[35rem] h-[35rem] bg-orange-400/15 rounded-full blur-[100px] z-0"
-        initial={{ x: '-50%', y: '-50%' }}
-        animate={{
-          x: ['-50%', '-70%', '-50%', '-30%', '-50%'],
-          y: ['-50%', '-30%', '-50%', '-70%', '-50%'],
-          rotate: [0, -180, -360],
-        }}
-        transition={{
-          duration: 80,
-          repeat: Infinity,
-          ease: 'linear',
-          delay: 20,
-        }}
-        style={{
-          left: '50%',
-          top: '50%',
-        }}
-      />
-      <motion.div
-        className="fixed w-[30rem] h-[30rem] bg-purple-400/10 rounded-full blur-[80px] z-0"
-        initial={{ x: '-50%', y: '-50%' }}
-        animate={{
-          x: ['-50%', '-40%', '-50%', '-60%', '-50%'],
-          y: ['-50%', '-60%', '-50%', '-40%', '-50%'],
-          rotate: [0, 90, 180, 270, 360],
-        }}
-        transition={{
-          duration: 100,
-          repeat: Infinity,
-          ease: 'linear',
-          delay: 40,
-        }}
-        style={{
-          left: '50%',
-          top: '50%',
-        }}
-      />
+
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -144,7 +97,7 @@ const UploadPage = () => {
                   formData.story &&
                   formData.images.length > 0
                 }
-                onCancel={() => navigate('/gallery')}
+                onCancel={() => navigate('/')}
               />
             </form>
           </motion.div>
