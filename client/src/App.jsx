@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux'
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import ProtectedRoute from './components/ProtectedRoute'
+import ScrollToTop from './components/ScrollToTop'
 import Toast from './components/Toast'
 import AuthPage from './pages/Authentication'
 import ForgotPassword from './pages/ForgotPassword'
@@ -40,6 +41,7 @@ function App() {
 
   return (
     <Router>
+      <ScrollToTop />
       <div className="bg-background dark:bg-background min-h-screen text-primary dark:text-primary transition-colors duration-500">
         <Navbar />
         <div className="pt-16 p-4">

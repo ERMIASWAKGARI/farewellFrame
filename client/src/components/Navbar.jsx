@@ -71,6 +71,7 @@ const Navbar = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [mobileOpen, profileOpen])
 
+  // Navbar.jsx
   const scrollToSection = (id) => {
     // If we're not on the home page, navigate there first with hash
     if (location.pathname !== '/') {
@@ -81,7 +82,15 @@ const Navbar = () => {
     // If we're already on home page, scroll to section
     const element = document.getElementById(id)
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' })
+      const navbarHeight = document.querySelector('nav')?.offsetHeight || 70
+      const elementPosition =
+        element.getBoundingClientRect().top + window.pageYOffset
+      const offsetPosition = elementPosition - navbarHeight
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth',
+      })
     }
     setMobileOpen(false)
   }
@@ -109,14 +118,19 @@ const Navbar = () => {
         <Link
           to="/"
           className="text-xl sm:text-2xl font-extrabold tracking-tight text-primary hover:opacity-90"
+          onClick={() => {
+            if (location.pathname === '/') {
+              window.scrollTo({ top: 0, behavior: 'smooth' })
+            }
+          }}
         >
           FarewellFrame
         </Link>
-
         {/* Desktop Links */}
         <div className="hidden md:flex items-center gap-6">
           {navLinks.map(({ to, label, isRoute }) =>
             isRoute ? (
+              // In your navLinks mapping
               <NavLink
                 key={to}
                 to={to}
@@ -130,6 +144,12 @@ const Navbar = () => {
                     hoverClass,
                   ].join(' ')
                 }
+                onClick={(e) => {
+                  if (location.pathname === '/' && to === '/') {
+                    e.preventDefault()
+                    window.scrollTo({ top: 0, behavior: 'smooth' })
+                  }
+                }}
               >
                 {label}
               </NavLink>
@@ -183,7 +203,6 @@ const Navbar = () => {
 
           <ThemeToggle />
         </div>
-
         {/* Mobile Hamburger */}
         <button
           className="md:hidden z-60 relative p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition"
@@ -211,11 +230,18 @@ const Navbar = () => {
         >
           {navLinks.map(({ to, label, isRoute }) =>
             isRoute ? (
+              // In your mobile navLinks mapping
               <NavLink
                 key={to}
                 to={to}
                 end={to === '/'}
-                onClick={() => setMobileOpen(false)}
+                onClick={(e) => {
+                  setMobileOpen(false)
+                  if (location.pathname === '/' && to === '/') {
+                    e.preventDefault()
+                    window.scrollTo({ top: 0, behavior: 'smooth' })
+                  }
+                }}
                 className={({ isActive }) =>
                   [
                     'block px-3 py-2 rounded text-sm font-medium transition-colors',
