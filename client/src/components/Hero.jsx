@@ -103,13 +103,13 @@ const HeroSection = () => {
         <div className="flex flex-wrap justify-center gap-4 mt-10">
           <Link
             to="/upload"
-            className="px-6 py-3 text-sm sm:text-base font-medium rounded-full bg-button hover:bg-primary/90 dark:hover:bg-primary/90 text-text-primary transition-all shadow-md hover:shadow-lg flex items-center gap-2"
+            className="px-6 py-3 text-sm sm:text-base font-medium rounded-md bg-button hover:bg-primary/90 dark:hover:bg-primary/90 text-text-primary transition-all shadow-md hover:shadow-lg flex items-center gap-2"
           >
             <BsFillSendFill /> Upload Your Farewell
           </Link>
           <Link
-            to="/gallery"
-            className="px-6 py-3 text-sm sm:text-base font-medium rounded-full border border-border text-text-primary hover:bg-primary/10 transition-all shadow-sm"
+            to="/#gallery"
+            className="px-6 py-3 text-sm sm:text-base font-medium rounded-md border border-border text-text-primary hover:bg-primary/10 transition-all shadow-sm"
           >
             Browse Gallery
           </Link>
