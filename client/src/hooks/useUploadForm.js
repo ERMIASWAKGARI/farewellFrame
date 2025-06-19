@@ -140,6 +140,7 @@ export const useUploadForm = () => {
       dispatch(showToast({ message: 'Upload successful!', type: 'success' }))
       navigate('/gallery')
     } catch (err) {
+      console.log('Error: ', err)
       const msg = err.response?.data?.message || 'Upload failed.'
       dispatch(showToast({ message: msg, type: 'error' }))
     } finally {

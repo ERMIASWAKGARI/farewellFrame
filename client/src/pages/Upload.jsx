@@ -2,7 +2,6 @@
 import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import BasicInfoSection from '../components/upload/BasicInfoSection'
-import EmojiPickerWrapper from '../components/upload/EmojiPickerWrapper'
 import FormActions from '../components/upload/FormActions'
 import FormHeader from '../components/upload/FormHeader'
 import ImageUploader from '../components/upload/ImageUploader'
@@ -13,8 +12,6 @@ const UploadPage = () => {
   const {
     formData,
     uploading,
-    showEmojiPicker,
-    emojiPickerPosition,
     lastWordsEditor,
     storyEditor,
     handleChange,
@@ -22,9 +19,6 @@ const UploadPage = () => {
     handleImageUpload,
     setDefaultImage,
     removeImage,
-    handleEmojiClick,
-    openEmojiPicker,
-    emojiPickerRef,
   } = useUploadForm()
 
   const navigate = useNavigate()
@@ -123,23 +117,14 @@ const UploadPage = () => {
               <RichTextEditor
                 label="Last Words (Short Message) *"
                 editor={lastWordsEditor}
-                onEmojiClick={(e) => openEmojiPicker(lastWordsEditor, e)}
                 minHeight="8rem"
               />
 
               <RichTextEditor
                 label="Your Story (Detailed Message) *"
                 editor={storyEditor}
-                onEmojiClick={(e) => openEmojiPicker(storyEditor, e)}
                 minHeight="16rem"
                 showTextAlign
-              />
-
-              <EmojiPickerWrapper
-                show={showEmojiPicker}
-                position={emojiPickerPosition}
-                onEmojiClick={handleEmojiClick}
-                ref={emojiPickerRef}
               />
 
               <FormActions

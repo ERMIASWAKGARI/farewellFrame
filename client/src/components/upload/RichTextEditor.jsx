@@ -5,8 +5,7 @@ import EditorToolbar from './EditorToolbar'
 const RichTextEditor = ({
   label,
   editor,
-  onEmojiClick,
-  showTextAlign = false,
+  minHeight = '12rem',
   borderColor = 'border-gray-200 dark:border-gray-600',
   bgColor = 'bg-white dark:bg-gray-800',
   textColor = 'text-gray-800 dark:text-gray-100',
@@ -52,18 +51,27 @@ const RichTextEditor = ({
       >
         {/* Always Visible Toolbar */}
         <div className="border-b border-gray-100 dark:border-gray-700 p-2">
-          <EditorToolbar
-            editor={editor}
-            onEmojiClick={onEmojiClick}
-            showTextAlign={showTextAlign}
-          />
+          <EditorToolbar editor={editor} />
         </div>
 
-        {/* Editor Content - Expanded to fill space */}
+        {/* Editor Content */}
         <div className="p-4">
           <EditorContent
             editor={editor}
-            className={`w-full focus:outline-none prose prose-sm dark:prose-invert max-w-none ${textColor} ${placeholderColor}`}
+            className={`w-full min-h-[${minHeight}] focus:outline-none prose dark:prose-invert prose-sm max-w-none
+              ${textColor} ${placeholderColor}
+              prose-headings:text-current
+              prose-strong:text-current prose-strong:font-bold
+              prose-em:text-current prose-em:italic
+              prose-ul:list-disc prose-ol:list-decimal
+              prose-li:marker:text-current
+              prose-blockquote:border-l-2 prose-blockquote:border-current
+              prose-blockquote:pl-4 prose-blockquote:italic
+              prose-code:bg-gray-100 dark:prose-code:bg-gray-700
+              prose-code:px-1 prose-code:rounded
+              prose-pre:bg-gray-800 prose-pre:text-gray-100
+              prose-a:text-primary hover:prose-a:text-primary-dark
+              prose-hr:border-gray-200 dark:prose-hr:border-gray-600`}
           />
         </div>
       </div>

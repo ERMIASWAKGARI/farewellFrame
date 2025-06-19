@@ -8,10 +8,8 @@ const ImageUploader = ({
   setDefaultImage,
 }) => {
   const [isDragging, setIsDragging] = useState(false)
-  // eslint-disable-next-line no-unused-vars
-  const [previewSize, setPreviewSize] = useState('h-24 w-24') // Default size
+  const [previewSize, setPreviewSize] = useState('h-24 w-24')
 
-  // Handle drag events
   const handleDragEnter = useCallback((e) => {
     e.preventDefault()
     e.stopPropagation()
@@ -34,71 +32,76 @@ const ImageUploader = ({
       e.preventDefault()
       e.stopPropagation()
       setIsDragging(false)
-      if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      if (e.dataTransfer.files?.length) {
         handleImageUpload({ target: { files: e.dataTransfer.files } })
       }
     },
     [handleImageUpload]
   )
 
-  // Adjust preview size based on number of images
   useEffect(() => {
     if (images.length <= 2) {
-      setPreviewSize('h-32 w-32') // Larger when few images
+      setPreviewSize('h-32 w-32')
     } else if (images.length <= 4) {
-      setPreviewSize('h-28 w-28') // Medium size
+      setPreviewSize('h-28 w-28')
     } else {
-      setPreviewSize('h-24 w-24') // Default size
+      setPreviewSize('h-24 w-24')
     }
   }, [images.length])
 
   return (
-    <div className="sm:col-span-2 space-y-2">
+    <div className="sm:col-span-2 space-y-3">
       <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
         Images (Max 2, 1 default) *
       </label>
 
+      {/* Drag-drop area */}
       <div
-        className={`mt-1 flex flex-col items-center justify-center rounded-xl ${
+        className={`relative flex flex-col items-center justify-center rounded-xl transition-all ${
           isDragging
             ? 'border-2 border-dashed border-orange-400 bg-orange-50 dark:bg-blue-900/10'
             : 'border-2 border-dashed border-gray-300 dark:border-gray-600 hover:border-orange-400'
-        } px-6 pt-8 pb-10 relative`}
+        } px-6 pt-8 pb-10`}
         onDragEnter={handleDragEnter}
         onDragLeave={handleDragLeave}
         onDragOver={handleDragOver}
         onDrop={handleDrop}
       >
-        {/* Previews */}
+        {/* Preview Images */}
         <div className="flex flex-wrap justify-center gap-4 mb-6 w-full">
-          <div>
-            {images.map((img, idx) => (
-              <div key={idx} className="relative group">
-                <img
-                  src={img.preview}
-                  className="h-28 w-28 object-cover rounded-lg"
-                />
-                <label className="absolute bottom-1 left-1 flex items-center space-x-1 bg-primary/80 rounded px-1 text-xs text-white">
-                  <input
-                    type="radio"
-                    name="defaultImage"
-                    checked={img.isDefault}
-                    onChange={() => setDefaultImage(idx)}
-                  />
-                  <span>Default</span>
-                </label>
-                <button
-                  onClick={() => removeImage(idx)}
-                  className="absolute -top-2 -right-2 bg-red-500 ..."
-                >
-                  ×
-                </button>
-              </div>
-            ))}
-          </div>
+          {images.map((img, idx) => (
+            <div key={idx} className="relative group">
+              <img
+                src={img.preview}
+                className={`${previewSize} object-cover rounded-lg border border-gray-300 shadow-md`}
+              />
+
+              {/* Default toggle */}
+              <button
+                type="button"
+                onClick={() => setDefaultImage(idx)}
+                className={`absolute bottom-1 left-1 text-xs px-2 py-0.5 rounded-full font-medium transition-colors ${
+                  img.isDefault
+                    ? 'bg-primary text-text-primary '
+                    : 'bg-gray-300/80 dark:bg-gray-600/80 text-text-primary hover:bg-primary'
+                }`}
+              >
+                {img.isDefault ? 'Default' : 'Set Default'}
+              </button>
+
+              {/* Remove button */}
+              <button
+                type="button"
+                onClick={() => removeImage(idx)}
+                className="absolute -top-2 -right-2 bg-red-600 hover:bg-red-700 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold shadow-md"
+              >
+                ×
+              </button>
+            </div>
+          ))}
         </div>
 
-        {/* Upload area */}
+        {/* Upload instruction */}
         <div className="text-center space-y-3">
           {isDragging ? (
             <div className="flex flex-col items-center">
@@ -113,7 +116,7 @@ const ImageUploader = ({
               <div className="flex flex-col sm:flex-row items-center justify-center gap-1 text-sm text-gray-600 dark:text-gray-300">
                 <label
                   htmlFor="file-upload"
-                  className="relative cursor-pointer rounded-md font-medium text-primary hover:bg-button focus-within:ring-1 focus-within:ring-text-primary focus-within:ring-offset-1 transition-colors"
+                  className="relative cursor-pointer rounded-md font-medium text-primary hover:bg-button px-2 py-1 transition-colors"
                 >
                   <span>Click to upload</span>
                   <input
@@ -128,7 +131,9 @@ const ImageUploader = ({
                 <p>or drag and drop</p>
               </div>
               <p className="text-xs text-text-secondary">
-                PNG, JPG up to 5MB each — {2 - images.length} slots remaining
+                PNG, JPG up to 5MB each —{' '}
+                <span className="font-semibold">{2 - images.length}</span>{' '}
+                slot(s) remaining
               </p>
             </>
           )}
