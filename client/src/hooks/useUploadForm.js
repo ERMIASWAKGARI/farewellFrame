@@ -164,7 +164,7 @@ export const useUploadForm = () => {
 
       await uploadFarewell(formDataToSend, token)
       dispatch(showToast({ message: 'Upload successful!', type: 'success' }))
-      navigate('/gallery')
+      navigate('/#gallery')
     } catch (error) {
       console.error('Upload error:', error)
       dispatch(
