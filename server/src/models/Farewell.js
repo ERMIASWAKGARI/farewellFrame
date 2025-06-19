@@ -6,6 +6,7 @@ const imageSchema = new mongoose.Schema(
     originalname: { type: String, required: true },
     mimetype: { type: String, required: true },
     size: { type: Number, required: true },
+    isDefault: { type: Boolean, default: false }, // ← Add this!
   },
   { _id: false }
 )

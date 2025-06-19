@@ -71,36 +71,31 @@ const ImageUploader = ({
       >
         {/* Previews */}
         <div className="flex flex-wrap justify-center gap-4 mb-6 w-full">
-          {images.map((img, idx) => (
-            <div key={idx} className="relative group">
-              <img
-                src={img.preview}
-                className="h-28 w-28 object-cover rounded-lg shadow-md"
-                alt="preview"
-              />
-
-              {/* Default selector */}
-              <label className="absolute bottom-1 left-1 bg-primary/80 rounded px-2 py-0.5">
-                <input
-                  type="radio"
-                  name="defaultImage"
-                  checked={img.isDefault}
-                  onChange={() => setDefaultImage(idx)}
-                  className="mr-1 align-middle"
+          <div>
+            {images.map((img, idx) => (
+              <div key={idx} className="relative group">
+                <img
+                  src={img.preview}
+                  className="h-28 w-28 object-cover rounded-lg"
                 />
-                Default
-              </label>
-
-              {/* Remove button */}
-              <button
-                type="button"
-                onClick={() => removeImage(idx)}
-                className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
-              >
-                ×
-              </button>
-            </div>
-          ))}
+                <label className="absolute bottom-1 left-1 flex items-center space-x-1 bg-primary/80 rounded px-1 text-xs text-white">
+                  <input
+                    type="radio"
+                    name="defaultImage"
+                    checked={img.isDefault}
+                    onChange={() => setDefaultImage(idx)}
+                  />
+                  <span>Default</span>
+                </label>
+                <button
+                  onClick={() => removeImage(idx)}
+                  className="absolute -top-2 -right-2 bg-red-500 ..."
+                >
+                  ×
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Upload area */}

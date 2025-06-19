@@ -3,6 +3,16 @@ const path = require('path')
 const fs = require('fs/promises')
 const { Types } = require('mongoose')
 
+const formatUploadedImages = (files, defaultIndex) => {
+  return files.map((file, idx) => ({
+    path: file.path.replace(/\\/g, '/'),
+    originalname: file.originalname,
+    mimetype: file.mimetype,
+    size: file.size,
+    isDefault: idx === defaultIndex,
+  }))
+}
+
 const createFarewell = async (req, res) => {
   try {
     const { name, department, year, lastWords, story } = req.body
@@ -12,19 +22,14 @@ const createFarewell = async (req, res) => {
       throw new Error('Unauthorized. User ID is missing.')
     }
 
-    if (!req.files || req.files.length === 0) {
-      return res.status(400).json({
-        success: false,
-        message: 'Please upload at least one image',
-      })
+    const defaultIdx = parseInt(req.body.defaultIndex, 10)
+    if (isNaN(defaultIdx)) {
+      return res
+        .status(400)
+        .json({ success: false, message: 'Invalid defaultIndex' })
     }
 
-    const images = req.files.map((file) => ({
-      path: file.path.replace(/\\/g, '/'),
-      originalname: file.originalname,
-      mimetype: file.mimetype,
-      size: file.size,
-    }))
+    const images = formatUploadedImages(req.files, defaultIdx)
 
     const farewell = new Farewell({
       user: userId,
@@ -45,7 +50,7 @@ const createFarewell = async (req, res) => {
   } catch (error) {
     console.error('Error creating farewell:', error)
 
-    // Clean up uploaded files if an error occurs
+    // Clean up any uploaded files
     if (req.files) {
       for (const file of req.files) {
         try {

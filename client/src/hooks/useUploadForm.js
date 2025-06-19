@@ -77,7 +77,6 @@ export const useUploadForm = () => {
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
-  // in useUploadForm hook
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files)
     if (formData.images.length + files.length > 2) {
@@ -89,58 +88,59 @@ export const useUploadForm = () => {
       preview: URL.createObjectURL(file),
       isDefault: false,
     }))
-    setFormData((prev) => ({ images: [...prev.images, ...previews] }))
+    setFormData((prev) => ({
+      ...prev,
+      images: [...prev.images, ...previews],
+    }))
   }
 
   const setDefaultImage = (index) => {
     setFormData((prev) => ({
       ...prev,
-      images: prev.images.map((img, i) => ({ ...img, isDefault: i === index })),
+      images: prev.images.map((img, i) => ({
+        ...img,
+        isDefault: i === index,
+      })),
     }))
   }
 
   const removeImage = (index) => {
-    const newImages = [...formData.images]
-    URL.revokeObjectURL(newImages[index].preview)
-    newImages.splice(index, 1)
-    setFormData((prev) => ({ ...prev, images: newImages }))
+    setFormData((prev) => {
+      const images = [...prev.images]
+      URL.revokeObjectURL(images[index]?.preview)
+      images.splice(index, 1)
+      // Ensure one default remains
+      if (images.length && !images.some((img) => img.isDefault)) {
+        images[0].isDefault = true
+      }
+      return { ...prev, images }
+    })
   }
 
+  // On submit
   const handleSubmit = async (e) => {
     e.preventDefault()
     setUploading(true)
-    setError(null)
-
     try {
-      const formDataToSend = new FormData()
+      const fd = new FormData()
+      fd.append('name', formData.name)
+      fd.append('department', formData.department)
+      fd.append('year', formData.year)
+      fd.append('lastWords', formData.lastWords)
+      fd.append('story', formData.story)
 
-      // Append text fields
-      formDataToSend.append('name', formData.name)
-      formDataToSend.append('department', formData.department)
-      formDataToSend.append('year', formData.year)
-      formDataToSend.append('lastWords', formData.lastWords)
-      formDataToSend.append('story', formData.story)
-
-      // Append each image file - ensure we're using the actual File object
-      formData.images.forEach((image) => {
-        if (image.file instanceof File) {
-          formDataToSend.append('images', image.file)
-        } else {
-          console.error('Invalid file object:', image)
-        }
+      formData.images.forEach((img) => {
+        if (img.file) fd.append('images', img.file)
       })
 
-      // Debug: Log FormData contents
-      for (let [key, value] of formDataToSend.entries()) {
-        console.log(key, value instanceof File ? value.name : value)
-      }
+      const defaultIndex = formData.images.findIndex((img) => img.isDefault)
+      fd.append('defaultIndex', defaultIndex > -1 ? defaultIndex : 0)
 
-      await uploadFarewell(formDataToSend, token)
+      await uploadFarewell(fd, token)
       dispatch(showToast({ message: 'Upload successful!', type: 'success' }))
       navigate('/gallery')
-    } catch (error) {
-      const msg =
-        error.response?.data?.message || 'Failed to upload. Please try again.'
+    } catch (err) {
+      const msg = err.response?.data?.message || 'Upload failed.'
       dispatch(showToast({ message: msg, type: 'error' }))
     } finally {
       setUploading(false)
