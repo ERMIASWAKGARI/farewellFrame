@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
-const upload = require('../config/multer')
+const fileUpload = require('../config/multer')
+
 const {
   createFarewell,
   getAllFarewells,
@@ -11,7 +12,22 @@ const { protect } = require('../middleware/auth')
 
 router
   .route('/')
-  .post(protect, upload.array('images'), createFarewell)
+  .post(
+    protect,
+    (req, res, next) => {
+      fileUpload.fields([
+        { name: 'image', maxCount: 1 },
+        { name: 'video', maxCount: 1 },
+      ])(req, res, (err) => {
+        if (err) {
+          console.error('Multer error:', err)
+          return res.status(400).json({ status: 'fail', message: err.message })
+        }
+        next()
+      })
+    },
+    createFarewell
+  )
   .get(getAllFarewells)
 
 router.route('/user').get(protect, getUserFarewell)

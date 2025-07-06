@@ -1,38 +1,26 @@
 const multer = require('multer')
-const path = require('path')
-const fs = require('fs')
+const { CloudinaryStorage } = require('multer-storage-cloudinary')
+const cloudinary = require('../utils/cloudinary')
 
-// Ensure upload directory exists
-const uploadDir = path.join(__dirname, '../uploads')
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true })
-}
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: async (req, file) => {
+    let folder = 'blog_uploads'
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, uploadDir)
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9)
-    const filename = uniqueSuffix + path.extname(file.originalname)
-    cb(null, filename)
-  },
-})
+    // If this is a profile photo, change the folder
+    if (file.fieldname === 'photo') {
+      folder = 'user_profiles'
+    }
 
-const fileFilter = (req, file, cb) => {
-  if (file.mimetype.startsWith('image/')) {
-    cb(null, true)
-  } else {
-    cb(new Error('Only image files are allowed!'), false)
-  }
-}
-
-const upload = multer({
-  storage,
-  fileFilter,
-  limits: {
-    files: 2,
+    return {
+      folder,
+      resource_type: file.mimetype.startsWith('video') ? 'video' : 'image',
+      allowed_formats: ['jpg', 'jpeg', 'png', 'mp4', 'mov', 'webm'],
+      public_id: `${file.fieldname}-${Date.now()}`,
+    }
   },
 })
 
-module.exports = upload
+const fileUpload = multer({ storage })
+
+module.exports = fileUpload
