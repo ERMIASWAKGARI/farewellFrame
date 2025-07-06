@@ -21,7 +21,6 @@ app.use('/api/v1/auth', authRoutes)
 app.use('/api/v1/farewells', farewellRoutes)
 
 // Error handling middleware
-// Error handling middleware
 app.use((err, req, res, next) => {
   err.statusCode = err.statusCode || 500
   err.status = err.status || 'error'

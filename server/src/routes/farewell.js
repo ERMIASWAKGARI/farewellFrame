@@ -5,7 +5,7 @@ const {
   createFarewell,
   getAllFarewells,
   deleteFarewell,
-  getUserFarewell, // Add this
+  getUserFarewell,
 } = require('../controllers/farewell')
 const { protect } = require('../middleware/auth')
 
@@ -14,8 +14,7 @@ router
   .post(protect, upload.array('images'), createFarewell)
   .get(getAllFarewells)
 
-router.route('/user').get(protect, getUserFarewell) // Add this route
-
+router.route('/user').get(protect, getUserFarewell)
 router.route('/:id').delete(deleteFarewell)
 
 module.exports = router

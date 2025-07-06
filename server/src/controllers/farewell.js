@@ -11,7 +11,7 @@ const {
 
 const formatUploadedImages = (files, defaultIndex) => {
   return files.map((file, idx) => ({
-    path: file.filename, // This now contains just the filename
+    path: file.filename,
     originalname: file.originalname,
     mimetype: file.mimetype,
     size: file.size,
