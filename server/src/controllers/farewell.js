@@ -11,6 +11,15 @@ const {
 const createFarewell = catchAsync(async (req, res, next) => {
   const { name, department, year, lastWords, story, defaultIndex } = req.body
   const userId = req.user?.id
+  console.log('Creating farewell for user:', userId, 'with data:', {
+    name,
+    department,
+    year,
+    lastWords,
+
+    story,
+    defaultIndex,
+  })
 
   if (!userId) {
     throw new UnauthorizedError('Unauthorized. User ID is missing.')
