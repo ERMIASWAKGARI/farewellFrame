@@ -15,10 +15,7 @@ router
   .post(
     protect,
     (req, res, next) => {
-      fileUpload.fields([
-        { name: 'image', maxCount: 1 },
-        { name: 'video', maxCount: 1 },
-      ])(req, res, (err) => {
+      fileUpload.fields([{ name: 'images', maxCount: 2 }])(req, res, (err) => {
         if (err) {
           console.error('Multer error:', err)
           return res.status(400).json({ status: 'fail', message: err.message })

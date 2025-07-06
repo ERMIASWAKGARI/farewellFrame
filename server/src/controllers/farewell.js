@@ -11,12 +11,14 @@ const {
 const createFarewell = catchAsync(async (req, res, next) => {
   const { name, department, year, lastWords, story, defaultIndex } = req.body
   const userId = req.user?.id
+  console.log('Request Body:', req.body, 'User ID:', userId)
 
   if (!userId) {
     throw new UnauthorizedError('Unauthorized. User ID is missing.')
   }
 
-  const imagesArray = req.files?.image || []
+  const imagesArray = req.files?.images || []
+  console.log('Images Array:', req.files)
 
   if (imagesArray.length === 0) {
     throw new ValidationError('At least one image is required')
@@ -34,6 +36,8 @@ const createFarewell = catchAsync(async (req, res, next) => {
     size: file.size,
     isDefault: idx === defaultIdx,
   }))
+
+  console.log('Processed Images:', images)
 
   const farewell = new Farewell({
     user: userId,

@@ -135,7 +135,7 @@ const UploadPage = () => {
                     {existingFarewell.images.map((image, index) => (
                       <div key={index} className="relative group">
                         <img
-                          src={`http://localhost:5000/uploads/${image.path}`}
+                          src={image.path}
                           alt={`Farewell image ${index + 1}`}
                           className="w-full h-36 object-cover rounded-lg border border-border shadow-sm transition-transform duration-300 group-hover:scale-105"
                         />

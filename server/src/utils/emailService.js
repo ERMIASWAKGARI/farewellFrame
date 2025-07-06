@@ -30,7 +30,8 @@ const sendEmail = async (email, subject, html) => {
 
 // Function to send verification email for registration
 const sendVerificationEmail = async (email, verificationToken) => {
-  const verificationUrl = `https://farewellframe.onrender.com/api/v1/verify-email/${verificationToken}`
+  // const verificationUrl = `https://farewellframe.onrender.com/api/v1/verify-email/${verificationToken}`
+  const verificationUrl = `http://localhost:5000/api/v1/verify-email/${verificationToken}`
   const subject = 'Complete Your Registration - Online Donation Platform'
 
   const html = `
