@@ -15,10 +15,10 @@ const sendEmail = async (email, subject, html) => {
 
   try {
     await transporter.sendMail({
-      from: '"Online Donation Platform Support" <support@onlinedonationplatform.com>',
+      from: '"Farewell Frame Support" <support@farewellframe.com>',
       to: email,
       subject: subject,
-      html: html, // Use HTML content instead of plain text
+      html: html,
     })
     console.log('Email sent successfully to: ', email)
   } catch (error) {
