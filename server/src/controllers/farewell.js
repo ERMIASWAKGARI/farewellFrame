@@ -1,6 +1,5 @@
 const Farewell = require('../models/Farewell')
-const path = require('path')
-const fs = require('fs/promises')
+const cloudinary = require('../utils/cloudinary')
 const { Types } = require('mongoose')
 const catchAsync = require('../utils/catchAsync')
 const {
@@ -9,35 +8,32 @@ const {
   UnauthorizedError,
 } = require('../utils/errors')
 
-const formatUploadedImages = (files, defaultIndex) => {
-  return files.map((file, idx) => ({
-    path: file.filename,
-    originalname: file.originalname,
-    mimetype: file.mimetype,
-    size: file.size,
-    isDefault: idx === defaultIndex,
-  }))
-}
-
 const createFarewell = catchAsync(async (req, res, next) => {
-  const { name, department, year, lastWords, story } = req.body
+  const { name, department, year, lastWords, story, defaultIndex } = req.body
   const userId = req.user?.id
-  console.log('req.body', req.body)
 
   if (!userId) {
     throw new UnauthorizedError('Unauthorized. User ID is missing.')
   }
 
-  const defaultIdx = parseInt(req.body.defaultIndex, 10)
+  const imagesArray = req.files?.image || []
+
+  if (imagesArray.length === 0) {
+    throw new ValidationError('At least one image is required')
+  }
+
+  const defaultIdx = parseInt(defaultIndex, 10)
   if (isNaN(defaultIdx)) {
     throw new ValidationError('Invalid defaultIndex')
   }
 
-  if (!req.files || req.files.length === 0) {
-    throw new ValidationError('At least one image is required')
-  }
-
-  const images = formatUploadedImages(req.files, defaultIdx)
+  const images = imagesArray.map((file, idx) => ({
+    path: file.path,
+    originalname: file.originalname,
+    mimetype: file.mimetype,
+    size: file.size,
+    isDefault: idx === defaultIdx,
+  }))
 
   const farewell = new Farewell({
     user: userId,
@@ -49,21 +45,7 @@ const createFarewell = catchAsync(async (req, res, next) => {
     images,
   })
 
-  try {
-    await farewell.save()
-  } catch (err) {
-    // Clean up uploaded files if saving fails
-    await Promise.all(
-      req.files.map((file) =>
-        fs
-          .unlink(file.path)
-          .catch((cleanupErr) =>
-            console.error('Failed to delete file:', cleanupErr)
-          )
-      )
-    )
-    throw err // Re-throw the error for the error handler
-  }
+  await farewell.save()
 
   res.status(201).json({
     success: true,
@@ -96,18 +78,21 @@ const deleteFarewell = catchAsync(async (req, res, next) => {
     throw new NotFoundError('Farewell not found')
   }
 
-  // Delete associated images
   await Promise.all(
     farewell.images.map((image) =>
-      fs
-        .unlink(image.path)
+      cloudinary.uploader
+        .destroy(image.path)
         .catch((err) =>
-          console.error(`Error deleting file ${image.path}:`, err)
+          console.error(`Error deleting Cloudinary file ${image.path}:`, err)
         )
     )
   )
 
-  await farewell.deleteOne()
+  if (farewell.video) {
+    await cloudinary.uploader.destroy(farewell.video, {
+      resource_type: 'video',
+    })
+  }
 
   res.status(200).json({
     success: true,
