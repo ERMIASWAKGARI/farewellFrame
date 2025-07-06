@@ -5,12 +5,7 @@ const cloudinary = require('../utils/cloudinary')
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: async (req, file) => {
-    let folder = 'blog_uploads'
-
-    // If this is a profile photo, change the folder
-    if (file.fieldname === 'photo') {
-      folder = 'user_profiles'
-    }
+    let folder = 'farewell_uploads'
 
     return {
       folder,

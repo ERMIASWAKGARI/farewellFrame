@@ -102,7 +102,8 @@ const sendVerificationEmail = async (email, verificationToken) => {
 
 // Function to send verification email after email update
 const sendEmailUpdateVerification = async (email, verificationToken) => {
-  const verificationUrl = `https://farewellframe.onrender.com/api/v1/verify-email?token=${verificationToken}`
+  // const verificationUrl = `https://farewellframe.onrender.com/api/v1/verify-email?token=${verificationToken}`
+  const verificationUrl = `http://localhost:5000/api/v1/verify-email?token=${verificationToken}`
   const subject = 'Verify Your New Email - Online Donation Platform'
 
   const html = `
@@ -159,7 +160,8 @@ const sendEmailUpdateVerification = async (email, verificationToken) => {
 
 // Function to send reset password email
 const sendResetPasswordEmail = async (email, token) => {
-  const resetUrl = `https://farewellframe.onrender.com/api/v1/reset-password/${token}`
+  // const resetUrl = `https://farewellframe.onrender.com/api/v1/reset-password/${token}`
+  const resetUrl = `http://localhost:5000/api/v1/reset-password/${token}`
   const subject = 'Secure Password Reset - Online Donation Platform'
 
   const html = `
