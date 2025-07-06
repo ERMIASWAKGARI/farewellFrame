@@ -136,10 +136,9 @@ const getUserFarewell = catchAsync(async (req, res, next) => {
   })
 })
 
-// Add to exports
 module.exports = {
   createFarewell,
   getAllFarewells,
   deleteFarewell,
-  getUserFarewell, // Add this
+  getUserFarewell,
 }
