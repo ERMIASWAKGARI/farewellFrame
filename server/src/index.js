@@ -18,7 +18,7 @@ app.use(express.json())
 connectDB()
 
 // allow cross-origin requests only from specific origins
-const allowedOrigins = ['https://farewellframe.vercel.app']
+const allowedOrigins = ['https://farewell-frame.vercel.app']
 app.use((req, res, next) => {
   const origin = req.headers.origin
   if (allowedOrigins.includes(origin)) {
