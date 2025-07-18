@@ -53,6 +53,8 @@ export const uploadFarewell = async (formData, token) => {
     headers: {
       'Content-Type': 'multipart/form-data',
       Authorization: `Bearer ${token}`,
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'POST, GET, PUT, DELETE',
     },
   }
 
