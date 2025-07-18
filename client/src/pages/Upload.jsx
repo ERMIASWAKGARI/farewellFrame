@@ -165,9 +165,23 @@ const UploadPage = () => {
               <div className="mt-10 flex justify-center">
                 <button
                   onClick={() => navigate('/')}
-                  className="px-6 py-2 rounded-lg bg-button text-white font-medium hover:bg-orange-500 transition duration-200"
+                  className="px-6 py-3 text-sm sm:text-base font-medium rounded-md border border-border text-text-primary hover:bg-primary/10 transition-all shadow-sm flex items-center gap-2 cursor-pointer"
                 >
-                  ⬅ Back to Home
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M3 9.75L12 4.5l9 5.25M9 22.5V12h6v10.5"
+                    />
+                  </svg>
+                  Back to Home
                 </button>
               </div>
             </div>
