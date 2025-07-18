@@ -97,22 +97,6 @@ const Gallery = () => {
     )
   }
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
-      </div>
-    )
-  }
-
-  if (error) {
-    return (
-      <div className="text-center py-10">
-        <p className="text-red-500">{error}</p>
-      </div>
-    )
-  }
-
   return (
     <div id="gallery" className="space-y-8 animate-fade-in p-4 md:p-6">
       <motion.h1
@@ -123,7 +107,6 @@ const Gallery = () => {
       >
         🎓 Gallery
       </motion.h1>
-
       {/* 🔍 Filters */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 w-full max-w-7xl mx-auto">
         {/* Search */}
@@ -203,11 +186,19 @@ const Gallery = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
-        {filtered.length > 0 ? (
-          filtered.map((student, idx) => (
+      {loading ? (
+        <div className="flex justify-center items-center h-64">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+        </div>
+      ) : error ? (
+        <div className="text-center py-10">
+          <p className="text-red-500">{error}</p>
+        </div>
+      ) : filtered.length > 0 ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+          {filtered.map((student, idx) => (
             <motion.div
-              key={student._id || idx} // Use MongoDB _id if available
+              key={student._id || idx}
               initial={{ opacity: 0, y: 30, scale: 0.95 }}
               whileInView={{ opacity: 1, y: 0, scale: 1 }}
               whileHover={{ scale: 1.05, rotate: 0.5 }}
@@ -251,20 +242,29 @@ const Gallery = () => {
                 <p className="text-sm text-text-secondary">
                   {student.department} - {student.year}
                 </p>
-                <p className="mt-2 text-text-secondary text-sm line-clamp-3 leading-relaxed italic">
-                  "{student.lastWords}"
-                </p>
+                <div className="relative pl-4 mt-2 text-text-secondary text-sm line-clamp-3 leading-relaxed italic [&>p]:inline [&>p]:m-0">
+                  <span className="absolute left-0 top-0 text-lg text-primary font-serif">
+                    “
+                  </span>
+                  <div
+                    className="inline"
+                    dangerouslySetInnerHTML={{ __html: student.lastWords }}
+                  />
+                  <span className="text-lg text-primary font-serif ml-1">
+                    ”
+                  </span>
+                </div>
               </div>
             </motion.div>
-          ))
-        ) : (
-          <div className="col-span-full text-center py-10">
-            <p className="text-text-secondary">
-              No students found matching your criteria
-            </p>
-          </div>
-        )}
-      </div>
+          ))}
+        </div>
+      ) : (
+        <div className="col-span-full text-center py-10">
+          <p className="text-text-secondary">
+            No students found matching your criteria
+          </p>
+        </div>
+      )}
 
       {/* Student Detail Modal */}
       <AnimatePresence>
@@ -370,11 +370,20 @@ const Gallery = () => {
                   </div>
 
                   <div className="bg-primary/10 p-4 rounded-lg border-l-4 border-primary">
-                    <p className="text-lg italic text-text-primary">
-                      "{selectedStudent.lastWords}"
-                    </p>
+                    <div className="relative pl-4 text-lg italic text-text-primary [&>p]:inline [&>p]:m-0">
+                      <span className="absolute left-0 top-0 text-2xl text-primary font-serif">
+                        “
+                      </span>
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html: selectedStudent.lastWords,
+                        }}
+                      />
+                      <span className="text-2xl text-primary font-serif ml-1">
+                        ”
+                      </span>
+                    </div>
                   </div>
-
                   <div>
                     <h3 className="text-xl font-semibold text-primary mb-3 flex items-center gap-2">
                       <svg
@@ -393,9 +402,19 @@ const Gallery = () => {
                       </svg>
                       My Story
                     </h3>
-                    <p className="text-text-secondary leading-relaxed">
-                      {selectedStudent.story}
-                    </p>
+                    <div className="text-text-secondary leading-relaxed [&>p]:mb-4 [&>p]:last:mb-0 relative pl-4">
+                      <span className="absolute left-0 top-0 text-2xl text-primary font-serif">
+                        “
+                      </span>
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html: selectedStudent.story,
+                        }}
+                      />
+                      <span className="block text-right text-2xl text-primary font-serif">
+                        ”
+                      </span>
+                    </div>
                   </div>
 
                   <div className="pt-4 border-t border-border">
