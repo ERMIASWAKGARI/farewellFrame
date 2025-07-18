@@ -211,7 +211,7 @@ export const useUploadForm = () => {
       console.error('Upload error:', error)
       dispatch(
         showToast({
-          message: error.response?.data?.message || 'Upload failed',
+          message: error.message || 'Upload failed',
           type: 'error',
         })
       )
