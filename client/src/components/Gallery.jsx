@@ -1,14 +1,13 @@
+/* eslint-disable no-unused-vars */
 import { Input, Select } from 'antd'
-// eslint-disable-next-line no-unused-vars
 import { AnimatePresence, motion } from 'framer-motion'
-
 import { ChevronLeft, ChevronRight, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { getAllFarewells } from '../api/farewellApi'
 
 const { Search } = Input
 const { Option } = Select
 
-import { mockStudents } from '../components/MockStudents'
 const Gallery = () => {
   const [search, setSearch] = useState('')
   const [department, setDepartment] = useState('Software Engineering')
@@ -17,9 +16,39 @@ const Gallery = () => {
   const [filtered, setFiltered] = useState([])
   const [selectedStudent, setSelectedStudent] = useState(null)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const [students, setStudents] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
   useEffect(() => {
-    let data = [...mockStudents]
+    const fetchFarewells = async () => {
+      try {
+        setLoading(true)
+        const response = await getAllFarewells()
+        // Transform data to match your frontend structure
+        const transformedData = response.data.map((student) => ({
+          ...student,
+          images: student.images.map((img) => img.path), // Extract image paths
+          uploadedAt: student.createdAt, // Map createdAt to uploadedAt
+        }))
+        setStudents(transformedData)
+        setFiltered(transformedData)
+      } catch (err) {
+        console.error('Error fetching farewells:', err)
+        setError('Failed to load data. Please try again later.')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchFarewells()
+  }, [])
+
+  // Filter and sort logic
+  useEffect(() => {
+    if (!students.length) return
+
+    let data = [...students]
 
     if (search.trim()) {
       data = data.filter(
@@ -44,7 +73,7 @@ const Gallery = () => {
     }
 
     setFiltered(data)
-  }, [search, department, year, sort])
+  }, [search, department, year, sort, students])
 
   const openStudentModal = (student) => {
     setSelectedStudent(student)
@@ -66,6 +95,22 @@ const Gallery = () => {
   const prevImage = () => {
     setCurrentImageIndex((prev) =>
       prev === 0 ? selectedStudent.images.length - 1 : prev - 1
+    )
+  }
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="text-center py-10">
+        <p className="text-red-500">{error}</p>
+      </div>
     )
   }
 
@@ -160,58 +205,66 @@ const Gallery = () => {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
-        {filtered.map((student, idx) => (
-          <motion.div
-            key={idx}
-            initial={{ opacity: 0, y: 30, scale: 0.95 }}
-            whileInView={{ opacity: 1, y: 0, scale: 1 }}
-            whileHover={{ scale: 1.05, rotate: 0.5 }}
-            transition={{ delay: idx * 0.05, duration: 0.6, ease: 'easeOut' }}
-            className="relative bg-card dark:bg-card-dark rounded-xl shadow-2xl overflow-hidden border border-border group hover:border-primary transition-all duration-500 cursor-pointer"
-            onClick={() => openStudentModal(student)}
-          >
-            {/* Image with multiple image indicator */}
-            <div className="overflow-hidden relative">
-              <img
-                src={student.images[0]}
-                alt={student.name}
-                className="w-full h-60 object-cover object-center group-hover:scale-110 transition-transform duration-500 ease-in-out"
-              />
-              {student.images.length > 1 && (
-                <div className="absolute bottom-2 right-2 bg-black/50 text-white text-xs px-2 py-1 rounded-full flex items-center">
-                  <span className="mr-1">+{student.images.length - 1}</span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-3 w-3"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
-                    />
-                  </svg>
-                </div>
-              )}
-            </div>
+        {filtered.length > 0 ? (
+          filtered.map((student, idx) => (
+            <motion.div
+              key={student._id || idx} // Use MongoDB _id if available
+              initial={{ opacity: 0, y: 30, scale: 0.95 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              whileHover={{ scale: 1.05, rotate: 0.5 }}
+              transition={{ delay: idx * 0.05, duration: 0.6, ease: 'easeOut' }}
+              className="relative bg-card dark:bg-card-dark rounded-xl shadow-2xl overflow-hidden border border-border group hover:border-primary transition-all duration-500 cursor-pointer"
+              onClick={() => openStudentModal(student)}
+            >
+              {/* Image with multiple image indicator */}
+              <div className="overflow-hidden relative">
+                <img
+                  src={student.images[0] || 'https://via.placeholder.com/300'}
+                  alt={student.name}
+                  className="w-full h-60 object-cover object-center group-hover:scale-110 transition-transform duration-500 ease-in-out"
+                />
+                {student.images.length > 1 && (
+                  <div className="absolute bottom-2 right-2 bg-black/50 text-white text-xs px-2 py-1 rounded-full flex items-center">
+                    <span className="mr-1">+{student.images.length - 1}</span>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-3 w-3"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
+                      />
+                    </svg>
+                  </div>
+                )}
+              </div>
 
-            {/* Content */}
-            <div className="p-4 text-center space-y-2 relative">
-              <h3 className="text-xl font-bold text-primary tracking-wide group-hover:text-accent transition-colors duration-300">
-                {student.name}
-              </h3>
-              <p className="text-sm text-text-secondary">
-                {student.department} - {student.year}
-              </p>
-              <p className="mt-2 text-text-secondary text-sm line-clamp-3 leading-relaxed italic">
-                "{student.lastWords}"
-              </p>
-            </div>
-          </motion.div>
-        ))}
+              {/* Content */}
+              <div className="p-4 text-center space-y-2 relative">
+                <h3 className="text-xl font-bold text-primary tracking-wide group-hover:text-accent transition-colors duration-300">
+                  {student.name}
+                </h3>
+                <p className="text-sm text-text-secondary">
+                  {student.department} - {student.year}
+                </p>
+                <p className="mt-2 text-text-secondary text-sm line-clamp-3 leading-relaxed italic">
+                  "{student.lastWords}"
+                </p>
+              </div>
+            </motion.div>
+          ))
+        ) : (
+          <div className="col-span-full text-center py-10">
+            <p className="text-text-secondary">
+              No students found matching your criteria
+            </p>
+          </div>
+        )}
       </div>
 
       {/* Student Detail Modal */}

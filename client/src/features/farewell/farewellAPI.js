@@ -76,3 +76,10 @@ export const getUserFarewell = async (token) => {
   const response = await axios.get(`${API_BASE_URL}/farewells/user`, config)
   return response.data
 }
+
+// farewellApi.js
+
+export const getAllFarewells = async () => {
+  const response = await axios.get(`${API_BASE_URL}/farewells`)
+  return response.data
+}
