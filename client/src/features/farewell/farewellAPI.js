@@ -48,7 +48,7 @@ export const resetPassword = async (token, password) => {
 
 // Add to farewellApi.js
 export const uploadFarewell = async (formData, token) => {
-  console.log('Form data: ', formData.story)
+  console.log('Form data: ', formData)
   const config = {
     headers: {
       'Content-Type': 'multipart/form-data',
