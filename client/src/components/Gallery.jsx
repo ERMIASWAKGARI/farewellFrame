@@ -3,7 +3,7 @@ import { Input, Select } from 'antd'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ChevronLeft, ChevronRight, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { getAllFarewells } from '../api/farewellApi'
+import { getAllFarewells } from '../features/farewell/farewellAPI'
 
 const { Search } = Input
 const { Option } = Select
