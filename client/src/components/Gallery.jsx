@@ -358,7 +358,7 @@ const Gallery = () => {
               </div>
 
               {/* Content Section */}
-              <div className="md:w-1/2 p-6 md:p-8 overflow-y-auto">
+              <div className="md:w-1/2 p-6 md:p-8 overflow-y-auto custom-scrollbar ">
                 <div className="space-y-6">
                   <div>
                     <h2 className="text-3xl font-bold text-primary">
