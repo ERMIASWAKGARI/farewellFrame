@@ -202,6 +202,7 @@ export const useUploadForm = () => {
       formData.images.forEach((img) => {
         formDataToSend.append('images', img.file)
       })
+      console.log('Submitting form data:', formDataToSend)
 
       await uploadFarewell(formDataToSend, token)
       dispatch(showToast({ message: 'Upload successful!', type: 'success' }))
