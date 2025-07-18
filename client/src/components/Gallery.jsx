@@ -25,11 +25,10 @@ const Gallery = () => {
       try {
         setLoading(true)
         const response = await getAllFarewells()
-        // Transform data to match your frontend structure
         const transformedData = response.data.map((student) => ({
           ...student,
-          images: student.images.map((img) => img.path), // Extract image paths
-          uploadedAt: student.createdAt, // Map createdAt to uploadedAt
+          images: student.images.map((img) => img.path),
+          uploadedAt: student.createdAt,
         }))
         setStudents(transformedData)
         setFiltered(transformedData)
