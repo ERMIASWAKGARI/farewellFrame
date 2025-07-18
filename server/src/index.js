@@ -17,23 +17,7 @@ app.use(express.json())
 
 connectDB()
 
-// allow cross-origin requests only from specific origins
-const allowedOrigins = [
-  'https://farewell-frame.vercel.app',
-  'http://localhost:5173',
-]
-app.use((req, res, next) => {
-  const origin = req.headers.origin
-  if (allowedOrigins.includes(origin)) {
-    res.setHeader('Access-Control-Allow-Origin', origin)
-  }
-  res.setHeader(
-    'Access-Control-Allow-Methods',
-    'GET, POST, PUT, DELETE, OPTIONS'
-  )
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
-  next()
-})
+res.setHeader('Access-Control-Allow-Origin', '*')
 
 // Routes
 app.use('/api/v1/auth', authRoutes)
