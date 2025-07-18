@@ -10,6 +10,8 @@ const {
 } = require('../controllers/farewell')
 const { protect } = require('../middleware/auth')
 
+const { ValidationError } = require('../utils/errors')
+
 router
   .route('/')
   .post(
@@ -18,7 +20,7 @@ router
       fileUpload.fields([{ name: 'images', maxCount: 2 }])(req, res, (err) => {
         if (err) {
           console.error('Multer error:', err)
-          return res.status(400).json({ status: 'fail', message: err })
+          throw new ValidationError(err.message || 'File upload error')
         }
         next()
       })
